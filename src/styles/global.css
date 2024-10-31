@@ -1,0 +1,41 @@
+body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #f3f4f6;
+}
+
+.hero {
+	text-align: center;
+	padding: 50px;
+	background-color: #1c1e21;
+	color: white;
+}
+
+.cta-button {
+	display: inline-block;
+	margin-top: 20px;
+	padding: 10px 20px;
+	background-color: #ff6b6b;
+	color: white;
+	text-decoration: none;
+	border-radius: 5px;
+}
+
+.features,
+.testimonials {
+	padding: 40px 20px;
+	text-align: center;
+}
+
+.features ul {
+	list-style: none;
+	padding: 0;
+}
+
+footer {
+	text-align: center;
+	padding: 20px;
+	background-color: #1c1e21;
+	color: white;
+}
