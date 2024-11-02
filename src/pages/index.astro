@@ -1,52 +1,10 @@
 ---
-// Importa el CSS global al principio del archivo Astro
-import "../styles/global.css";
-import WelcomeImage from "@components/WelcomeImage.astro";
+import Layout from "../layouts/Layout.astro";
+import MovieList from "@components/MovieList.astro";
 
 const currentYear = new Date().getFullYear();
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Top Movies</title>
-  </head>
-  <body>
-    <header class="hero">
-      <h1>Bienvenido a Top Movies</h1>
-      <p>
-        Explora las mejores películas y series año tras año, con las más altas
-        puntuaciones y recomendaciones.
-      </p>
-      <WelcomeImage />
-      <a href="/login" class="cta-button">Comienza a explorar</a>
-    </header>
-
-    <section class="features">
-      <h2>¿Qué encontrarás aquí?</h2>
-      <ul>
-        <li>Películas y series mejor valoradas de cada año.</li>
-        <li>Personaliza tu búsqueda por puntaje y año.</li>
-        <li>
-          Sigue tu progreso de visualización y obtén recomendaciones
-          personalizadas.
-        </li>
-      </ul>
-    </section>
-
-    <section class="testimonials">
-      <h2>Comentarios de nuestros usuarios</h2>
-      <blockquote>
-        “¡La mejor app para cinéfilos! Me encanta poder ver mi progreso.”
-      </blockquote>
-      <blockquote>
-        “Increíble para descubrir películas de años anteriores que me había
-        perdido.”
-      </blockquote>
-    </section>
-
-    <footer>
-      <p>© {currentYear} MovieTracker. Todos los derechos reservados.</p>
-    </footer>
-  </body>
-</html>
+<Layout title="Top Movies">
+  <MovieList year={currentYear.toString()} />
+</Layout>

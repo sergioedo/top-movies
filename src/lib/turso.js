@@ -26,6 +26,18 @@ export async function deleteMoviesByYear(year) {
 	`, [year.toString()]);
 }
 
+export async function getBestMoviesByYear(year, minRating = 7) {
+	const query = `
+	  SELECT id, title, release_date, rating, overview, poster_path
+	  FROM movies
+	  WHERE strftime('%Y', release_date) = ? AND rating >= ?
+	  ORDER BY rating DESC
+	`;
+
+	const { rows } = await client.execute(query, [year, minRating]);
+	return rows;
+}
+
 export async function saveMovie(movie) {
 	const { id, title, release_date, vote_average, overview, poster_path } = movie;
 	await client.execute(`
@@ -33,3 +45,4 @@ export async function saveMovie(movie) {
     VALUES (?, ?, ?, ?, ?, ?)
   `, [id, title, release_date, vote_average, overview, poster_path]);
 }
+

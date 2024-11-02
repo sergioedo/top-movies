@@ -1,0 +1,10 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import MovieList from "@components/MovieList.astro";
+
+const { year } = Astro.params;
+---
+
+<Layout title="Top Movies">
+  <MovieList year={year} />
+</Layout>

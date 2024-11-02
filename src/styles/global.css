@@ -1,41 +1,62 @@
-body {
-	font-family: Arial, sans-serif;
-	margin: 0;
-	padding: 0;
-	background-color: #f3f4f6;
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
 }
 
-.hero {
-	text-align: center;
-	padding: 50px;
-	background-color: #1c1e21;
-	color: white;
+@keyframes fade-out {
+	to {
+		opacity: 0;
+	}
 }
 
-.cta-button {
-	display: inline-block;
-	margin-top: 20px;
-	padding: 10px 20px;
-	background-color: #ff6b6b;
-	color: white;
-	text-decoration: none;
-	border-radius: 5px;
+@keyframes slide-from-right {
+	from {
+		transform: translateX(30px);
+	}
 }
 
-.features,
-.testimonials {
-	padding: 40px 20px;
-	text-align: center;
+@keyframes slide-to-left {
+	to {
+		transform: translateX(-30px);
+	}
 }
 
-.features ul {
-	list-style: none;
-	padding: 0;
+::view-transition-old(root) {
+	animation: 90ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+		300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
 }
 
-footer {
-	text-align: center;
-	padding: 20px;
-	background-color: #1c1e21;
-	color: white;
+::view-transition-new(root) {
+	animation: 210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+		300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+}
+
+::view-transition-old(movie-poster),
+::view-transition-new(movie-poster) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
+::view-transition-image-pair(movie-poster) {
+	isolation: none;
+}
+
+.nav {
+	view-transition-name: main-header;
+	contain: paint;
+}
+
+.movie-poster {
+	view-transition-name: movie-poster;
+	contain: paint;
+}
+
+.person-photo {
+	view-transition-name: person-photo;
+	contain: paint;
+}
+
+.thumbnail {
+	contain: paint;
 }
