@@ -5,11 +5,14 @@
 		"paths": {
 			"@components/*": [
 				"components/*"
+			],
+			"@layouts/*": [
+				"layouts/*"
 			]
-		}
+		},
+		"strict": false
 	},
 	"include": [
 		"src"
 	],
-	"strict": false
 }

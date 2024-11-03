@@ -26,6 +26,62 @@ export async function deleteMoviesByYear(year) {
 	`, [year.toString()]);
 }
 
+export async function getTopMoviesByYear(numTop = 1) {
+	const query = `
+	  SELECT id, title, year, release_date, rating, poster_path
+		FROM (
+		SELECT 
+			id,
+			title, 
+			strftime('%Y', release_date) as year, 
+			release_date,
+			rating, 
+			poster_path, 
+			ROW_NUMBER() OVER (PARTITION BY strftime('%Y', release_date) ORDER BY rating DESC) AS ranking
+		FROM movies
+		) AS ranked_movies
+		WHERE ranking <= ?
+		ORDER BY year DESC, rating DESC
+	`;
+
+	const { rows } = await client.execute(query, [numTop]);
+
+	// Agrupar las películas por año
+	const moviesByYear = rows.reduce((acc, movie) => {
+		const { year } = movie;
+		if (!acc[year]) {
+			acc[year] = [];
+		}
+		acc[year].push({
+			...movie
+		});
+		return acc;
+	}, {});
+
+	return Object.keys(moviesByYear).map(year => ({ year, movies: moviesByYear[year] })).sort((a, b) => b.year - a.year);
+}
+
+export async function getTotalMoviesByYear() {
+	const query = `
+	SELECT     
+  		strftime('%Y', release_date) as year, 
+  		count(*) as count
+	FROM movies
+	GROUP BY year
+	ORDER BY year DESC
+	`;
+
+	const { rows } = await client.execute(query, []);
+
+	const totalMoviesByYear = rows.reduce((acc, curr) => {
+		const { year, count } = curr;
+		acc[year] = count;
+		return acc;
+	}, {});
+
+	return totalMoviesByYear;
+}
+
 export async function getBestMoviesByYear(year, minRating = 7) {
 	const query = `
 	  SELECT id, title, release_date, rating, overview, poster_path

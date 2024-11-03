@@ -1,10 +1,10 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import MovieList from "@components/MovieList.astro";
+import Layout from "@layouts/Layout.astro";
+import YearMoviesList from "@components/YearMoviesList.astro";
 
 const currentYear = new Date().getFullYear();
 ---
 
 <Layout title="Top Movies">
-  <MovieList year={currentYear.toString()} />
+  <YearMoviesList />
 </Layout>
