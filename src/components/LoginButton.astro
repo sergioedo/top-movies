@@ -4,6 +4,16 @@
 >
 
 <script>
+  // https://developers.google.com/identity/gsi/web/reference/js-reference?hl=es-419#GsiButtonConfiguration
+  const googleButtonOptions = {
+    type: "icon", //standard (Default), icon
+    theme: "filled_blue", // outline, filled_blue, filled_black
+    size: "medium", // small, medium, large
+    text: "signin_with", // signin_with, signup_with, continue_with, signin
+    shape: "circle", // rectangular, pill, circle, square
+    //   logo_alignment: "left", // left, center
+  };
+
   window.onload = () => {
     google.accounts.id.initialize({
       client_id: import.meta.env.PUBLIC_GOOGLE_CLIENT_ID,
@@ -16,15 +26,7 @@
     } else {
       google.accounts.id.renderButton(
         document.getElementById("googleSignInButton"),
-        // https://developers.google.com/identity/gsi/web/reference/js-reference?hl=es-419#GsiButtonConfiguration
-        {
-          type: "icon", //standard (Default), icon
-          theme: "filled_blue", // outline, filled_blue, filled_black
-          size: "medium", // small, medium, large
-          text: "signin_with", // signin_with, signup_with, continue_with, signin
-          shape: "circle", // rectangular, pill, circle, square
-          //   logo_alignment: "left", // left, center
-        }
+        googleButtonOptions
       );
     }
   };
@@ -54,7 +56,7 @@
     document.getElementById("googleSignInButton").style.display = "block";
     google.accounts.id.renderButton(
       document.getElementById("googleSignInButton"),
-      { theme: "outline", size: "large" }
+      googleButtonOptions
     );
     document.getElementById("logoutButton").style.display = "none";
   };
