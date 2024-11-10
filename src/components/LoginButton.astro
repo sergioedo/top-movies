@@ -1,4 +1,4 @@
-<button id="googleSignInButton">Iniciar sesión con Google</button>
+<button id="googleSignInButton"></button>
 <button id="logoutButton" style="display: none" onclick="logout()"
   >Cerrar sesión</button
 >
@@ -16,7 +16,15 @@
     } else {
       google.accounts.id.renderButton(
         document.getElementById("googleSignInButton"),
-        { theme: "outline", size: "large" }
+        // https://developers.google.com/identity/gsi/web/reference/js-reference?hl=es-419#GsiButtonConfiguration
+        {
+          type: "icon", //standard (Default), icon
+          theme: "filled_blue", // outline, filled_blue, filled_black
+          size: "medium", // small, medium, large
+          text: "signin_with", // signin_with, signup_with, continue_with, signin
+          shape: "circle", // rectangular, pill, circle, square
+          //   logo_alignment: "left", // left, center
+        }
       );
     }
   };
