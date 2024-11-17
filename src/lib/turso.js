@@ -102,3 +102,20 @@ export async function saveMovie(movie) {
   `, [id, title, release_date, vote_average, overview, poster_path]);
 }
 
+export async function saveUserMovie(movieId, userEmail, status) {
+	await client.execute(
+		`INSERT INTO user_movies (user_email, movie_id, status)
+		VALUES (?, ?, ?)
+		ON CONFLICT(user_email, movie_id) DO UPDATE SET status = excluded.status, updated_at = CURRENT_TIMESTAMP`,
+		[userEmail, movieId, status]
+	);
+}
+
+export async function getUserMovies(userEmail) {
+	const query = `
+		SELECT movie_id, status, updated_at
+		FROM user_movies
+		WHERE user_email = ?`;
+	const { rows } = await client.execute(query, [userEmail]);
+	return rows;
+}
