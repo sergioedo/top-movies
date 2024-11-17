@@ -5,12 +5,6 @@ import { getBestMoviesByYear } from "../lib/turso";
 const { year } = Astro.props;
 
 const topMovies = await getBestMoviesByYear(year);
-// const popularMoviesResponse = await fetch(
-//   "https://api.themoviedb.org/3/movie/popular?api_key=" +
-//     import.meta.env.TMDB_API_KEY
-// );
-// const popularMoviesData = await popularMoviesResponse.json();
-// const popularMovies = popularMoviesData.results;
 ---
 
 <div class="container mx-auto px-4 pt-16 mb-16">
@@ -24,5 +18,4 @@ const topMovies = await getBestMoviesByYear(year);
       {topMovies.map((movie) => <MovieCard movie={movie} />)}
     </div>
   </div>
-  <!-- end pouplar-movies -->
 </div>
