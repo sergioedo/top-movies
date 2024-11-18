@@ -26,13 +26,11 @@ const { movie } = Astro.props;
       <StatusButton
         showStatus={["WATCHED"]}
         iconStatus="WATCHED"
-        color="green"
         size="small"
       />
       <StatusButton
         showStatus={["DISCARD"]}
         iconStatus="DISCARD"
-        color="red"
         size="small"
       />
     </div>
@@ -45,14 +43,12 @@ const { movie } = Astro.props;
         iconStatus="WATCHED"
         actionStatus="WATCHED"
         showStatus={["UNKNOWN"]}
-        color="green"
         opacity={true}
       />
       <StatusButton
         iconStatus="DISCARD"
         actionStatus="DISCARD"
         showStatus={["UNKNOWN"]}
-        color="red"
         opacity={true}
       />
     </div>

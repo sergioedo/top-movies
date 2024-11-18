@@ -6,17 +6,20 @@ interface Props {
   actionStatus?: string;
   iconStatus?: string;
   opacity?: boolean;
-  color: string;
   size?: string;
 }
 
-const { showStatus, actionStatus, iconStatus, opacity, color, size } =
-  Astro.props;
+const { showStatus, actionStatus, iconStatus, opacity, size } = Astro.props;
+
+const statusBorderColors = {
+  WATCHED: "border-green-300",
+  DISCARD: "border-red-300",
+};
 ---
 
 <button
-  id={`watched-button`}
-  class={`bg-slate-600 hover:bg-slate-700 border-2 border-${color}-300 ${opacity ? "opacity-90 hover:opacity-100" : ""} text-white font-bold ${size === "small" ? "py-2 px-2" : "py-4 px-4"} rounded-full mx-2 pointer-events-auto`}
+  id={`watched-button-${showStatus}-${size ? size : "big"}`}
+  class={`bg-slate-600 hover:bg-slate-700 border-2 ${statusBorderColors[iconStatus]} ${opacity ? "opacity-90 hover:opacity-100" : ""} text-white font-bold ${size === "small" ? "py-2 px-2" : "py-4 px-4"} rounded-full mx-2 pointer-events-auto`}
   @click.stop={actionStatus
     ? `handleStatusChange(movie_id, '${actionStatus}')`
     : 'console.log("no action")'}
@@ -27,7 +30,7 @@ const { showStatus, actionStatus, iconStatus, opacity, color, size } =
     iconStatus === "WATCHED" && (
       <svg
         viewBox="0 0 24 24"
-        class={`stroke-${color}-600 ${size === "small" ? "w-8 h-8 md:w-6 md:h-6 lg:w-4 lg:h-4" : "w-16 h-16 md:w-8 md:h-8 lg:w-6 lg:h-6"}`}
+        class={`stroke-green-600 ${size === "small" ? "w-8 h-8 md:w-6 md:h-6 lg:w-4 lg:h-4" : "w-16 h-16 md:w-8 md:h-8 lg:w-6 lg:h-6"}`}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -57,7 +60,7 @@ const { showStatus, actionStatus, iconStatus, opacity, color, size } =
   {
     iconStatus === "DISCARD" && (
       <svg
-        class={`stroke-${color}-800 fill-${color}-600 ${size === "small" ? "w-8 h-8 md:w-6 md:h-6 lg:w-4 lg:h-4" : "w-16 h-16 md:w-8 md:h-8 lg:w-6 lg:h-6"}`}
+        class={`stroke-red-800 fill-red-600 ${size === "small" ? "w-8 h-8 md:w-6 md:h-6 lg:w-4 lg:h-4" : "w-16 h-16 md:w-8 md:h-8 lg:w-6 lg:h-6"}`}
         viewBox="0 0 32 32"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
