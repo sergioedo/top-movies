@@ -21,7 +21,7 @@ const { movie } = Astro.props;
     </a>
 
     <div
-      class="absolute top-0 right-0 flex justify-between px-0 py-2 pointer-events-none z-20"
+      class="absolute top-0 right-0 flex flex-col justify-between px-0 py-0 pointer-events-none z-20"
     >
       <StatusButton
         showStatus={["WATCHED"]}
@@ -32,6 +32,13 @@ const { movie } = Astro.props;
         showStatus={["DISCARD"]}
         iconStatus="DISCARD"
         size="small"
+      />
+      <StatusButton
+        showStatus={["WATCHED", "DISCARD"]}
+        iconStatus="UNDO"
+        actionStatus="UNKNOWN"
+        size="small"
+        opacity={true}
       />
     </div>
 
