@@ -4,7 +4,7 @@ import type { StringMappingType } from "typescript";
 interface Props {
   showStatus: string[];
   actionStatus?: string;
-  iconStatus?: string;
+  iconStatus: string;
   opacity?: boolean;
   size?: string;
 }
@@ -19,7 +19,7 @@ const statusBorderColors = {
 
 <button
   id={`watched-button-${showStatus}-${size ? size : "big"}`}
-  class={`bg-slate-600 hover:bg-slate-700 border-2 ${statusBorderColors[iconStatus]} ${opacity ? "opacity-90 hover:opacity-100" : ""} text-white font-bold ${size === "small" ? "py-2 px-2" : "py-4 px-4"} rounded-full mx-2 pointer-events-auto`}
+  class={`bg-slate-600 ${actionStatus ? "hover:bg-slate-700" : ""} border-2 ${statusBorderColors[iconStatus]} ${opacity ? "opacity-90 hover:opacity-100" : ""} text-white font-bold ${size === "small" ? "py-2 px-2" : "py-4 px-4"} rounded-full mx-2 ${actionStatus ? "pointer-events-auto" : ""}`}
   @click.stop={actionStatus
     ? `handleStatusChange(movie_id, '${actionStatus}')`
     : 'console.log("no action")'}
