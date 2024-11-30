@@ -19,16 +19,26 @@ export async function GET({ request }) {
 		// Borrar las películas del año antes de insertar nuevas
 		await deleteMoviesByYear(year);
 
-		// Llamada a la API de TMDb para obtener las películas filtradas
-		const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&primary_release_year=${year}&vote_average.gte=${ratingThreshold}&vote_count.gte=${votesCountThreshold}&sort_by=vote_average.desc`);
-		const data = await res.json();
+		let allMovies = [];
+		let page = 1;
+		let totalPages = 1; // Se actualiza después de la primera llamada
+
+		while (page <= totalPages) {
+			// Llamada a la API de TMDb para obtener las películas filtradas
+			const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&primary_release_year=${year}&vote_average.gte=${ratingThreshold}&vote_count.gte=${votesCountThreshold}&sort_by=vote_average.desc&page=${page}`);
+			const data = await res.json();
+
+			allMovies = [...allMovies, ...data.results];
+			totalPages = data.total_pages; // Actualiza el total de páginas tras la primera llamada
+			page += 1; // Incrementa el número de página
+		}
 
 		// Guardar las películas filtradas en la base de datos
-		for (const movie of data.results) {
+		for (const movie of allMovies) {
 			await saveMovie(movie);
 		}
 
-		return new Response(JSON.stringify({ success: true, movies: data.results }), {
+		return new Response(JSON.stringify({ success: true, movies: allMovies }), {
 			status: 200,
 			headers: { 'Content-Type': 'application/json' },
 		});
