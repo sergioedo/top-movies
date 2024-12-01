@@ -12,7 +12,7 @@ import {
 // https://github.com/WICG/view-transitions/blob/main/explainer.md#cross-document-same-origin-transitions
 // https://github.com/WICG/view-transitions/blob/main/explainer.md#script-events
 function shouldDisableSpa() {
-	return false;
+	return true;
 }
 
 navigation.addEventListener('navigate', (navigateEvent) => {
