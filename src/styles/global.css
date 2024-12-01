@@ -60,3 +60,6 @@
 .thumbnail {
 	contain: paint;
 }
+
+/* Alpine x-cloak */
+[x-cloak] { display: none !important; }

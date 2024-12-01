@@ -20,11 +20,13 @@ const statusBorderColors = {
 
 <button
   id={`watched-button-${showStatus}-${size ? size : "big"}`}
-  class={`bg-slate-600 ${actionStatus ? "hover:bg-slate-700" : ""} border-2 ${statusBorderColors[iconStatus]} ${opacity ? "opacity-90 hover:opacity-100" : ""} text-white font-bold ${size === "small" ? "py-2 px-2" : "py-4 px-4"} rounded-full mx-2 mt-2 ${actionStatus ? "pointer-events-auto" : ""}`}
+  class={`bg-slate-600 ${actionStatus ? "hover:bg-slate-700" : ""} border-2 ${statusBorderColors[iconStatus]} ${opacity ? "opacity-90 hover:opacity-100" : ""} text-white font-bold ${size === "small" ? "py-2 px-2" : "py-4 px-4"} rounded-full mx-2 mt-2 ${actionStatus ? "pointer-events-auto" : ""} transition ease-in-out duration-300`}
+  :class="movie ? '' : 'hidden'"
+  x-cloak
   @click.stop={actionStatus
-    ? `handleStatusChange(movie_id, '${actionStatus}')`
+    ? `await Alpine.store('globalState').updateMovieStatus(movie?.movie_id, '${actionStatus}')`
     : 'console.log("no action")'}
-  x-show={`${JSON.stringify(showStatus)}.includes(status)`}
+  x-show={`movie && ${JSON.stringify(showStatus)}.includes(movie?.status)`}
   type="button"
 >
   {

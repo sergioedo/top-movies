@@ -27,12 +27,7 @@ const { title } = Astro.props as Props;
     </script>
   </head>
   <body class="font-sans bg-slate-700 text-white">
-    <div
-      id="root"
-      class="h-screen overflow-hidden flex flex-col"
-      x-data="{ movies: [] }"
-      x-init="movies = JSON.parse(localStorage.getItem('movies') || '[]')"
-    >
+    <div id="root" class="h-screen overflow-hidden flex flex-col">
       <Nav />
       <div id="container" class="h-full flex-1 overflow-y-auto">
         <div id="content">
@@ -45,18 +40,84 @@ const { title } = Astro.props as Props;
 </html>
 
 <script>
-  // If logged user, get user movies info
-  if (localStorage.getItem("user")) {
-    const user = JSON.parse(localStorage.getItem("user"));
-    // TODO: use id_token from localstorage as Bearer authorization header
-    const response = await fetch("/api/user/movies?user_email=" + user.email, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
+  document.addEventListener("alpine:init", () => {
+    Alpine.store("globalState", {
+      movies: [],
+      async init() {
+        if (localStorage.getItem("user")) {
+          const user = JSON.parse(localStorage.getItem("user"));
+          // TODO: use id_token from localstorage as Bearer authorization header
+          const response = await fetch(
+            "/api/user/movies?user_email=" + user.email,
+            {
+              method: "GET",
+              headers: { "Content-Type": "application/json" },
+            }
+          );
 
-    if (response.ok) {
-      const userMovies = await response.json();
-      localStorage.setItem("movies", JSON.stringify(userMovies));
+          if (response.ok) {
+            const userMovies = await response.json();
+            this.movies.push(...userMovies);
+            this.syncToLocalStorage();
+          }
+        } else {
+          this.movies.push(
+            ...JSON.parse(localStorage.getItem("movies") || "[]")
+          ); // Estado inicial
+        }
+      },
+      // Guarda el estado actual en localStorage
+      syncToLocalStorage() {
+        localStorage.setItem("movies", JSON.stringify(this.movies));
+      },
+      // Limpia el estado global
+      clearMovies() {
+        this.movies = [];
+        this.syncToLocalStorage();
+      },
+      getMovie(movieId) {
+        return this.movies.find((m) => m.movie_id === movieId);
+      },
+      async updateMovieStatus(movieId, newStatus) {
+        // Actualiza la pelicula en el estado de alpine
+        if (this.movies.find((m) => m.movie_id === movieId)) {
+          this.movies = this.movies.map((movie) =>
+            movie.movie_id === movieId ? { ...movie, status: newStatus } : movie
+          );
+        } else {
+          this.movies = [
+            ...this.movies,
+            { movie_id: movieId, status: newStatus },
+          ];
+        }
+        // Guarda en localstorage
+        this.syncToLocalStorage();
+        // save user state (server)
+        if (localStorage.getItem("user")) {
+          const user = JSON.parse(localStorage.getItem("user"));
+          const response = await fetch("/api/user/movies/" + movieId, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              userEmail: user.email,
+              movieId,
+              status: newStatus,
+            }),
+          });
+
+          if (response.ok) {
+            console.log("Estado actualizado correctamente");
+            // Actualiza la UI según sea necesario
+          }
+        }
+      },
+    });
+  });
+
+  /*window.addEventListener("storage", (event) => {
+    if (event.key === "movies") {
+      const updatedData = JSON.parse(event.newValue || "[]");
+      updateGlobalState(updatedData);
     }
-  }
+  });*/
 </script>

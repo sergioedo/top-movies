@@ -39,13 +39,15 @@
       body: JSON.stringify({ idToken }),
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then(async (data) => {
         if (data.user) {
           localStorage.setItem("user", JSON.stringify(data.user));
           localStorage.setItem("id_token", idToken);
           document.getElementById("googleSignInButton").style.display = "none";
           document.getElementById("logoutButton").style.display = "block";
           console.log("Inicio de sesión exitoso");
+          await Alpine.store("globalState").clearMovies();
+          await Alpine.store("globalState").init();
         } else {
           console.error("Error en la autenticación");
         }
@@ -55,12 +57,12 @@
   window.logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("id_token");
-    localStorage.removeItem("movies");
     document.getElementById("googleSignInButton").style.display = "block";
     google.accounts.id.renderButton(
       document.getElementById("googleSignInButton"),
       googleButtonOptions
     );
     document.getElementById("logoutButton").style.display = "none";
+    Alpine.store("globalState").clearMovies();
   };
 </script>
