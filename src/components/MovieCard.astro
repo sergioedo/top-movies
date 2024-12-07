@@ -6,9 +6,10 @@ const { movie } = Astro.props;
 
 <div
   class="mt-8"
+  :class="movie.visible ? '' : 'hidden'"
   x-data=`{ 
-  	get movie() { 
-		return $store?.globalState?.getMovie(${movie.id}) || { movie_id: ${movie.id}, status: 'UNKNOWN' }
+  	get movie() {
+		return $store?.globalState?.getMovie(${movie.id}) || { movie_id: ${movie.id}, status: 'UNKNOWN', visible: true }
 		} 
 	}`
 >

@@ -43,6 +43,7 @@ const { title } = Astro.props as Props;
   document.addEventListener("alpine:init", () => {
     Alpine.store("globalState", {
       movies: [],
+      showUnknownOnly: true,
       async init() {
         if (localStorage.getItem("user")) {
           const user = JSON.parse(localStorage.getItem("user"));
@@ -66,6 +67,12 @@ const { title } = Astro.props as Props;
           ); // Estado inicial
         }
       },
+      setShowUnknownOnly(state) {
+        this.showUnknownOnly = state;
+      },
+      isShowUnknownOnly() {
+        return this.showUnknownOnly;
+      },
       // Guarda el estado actual en localStorage
       syncToLocalStorage() {
         localStorage.setItem("movies", JSON.stringify(this.movies));
@@ -76,7 +83,14 @@ const { title } = Astro.props as Props;
         this.syncToLocalStorage();
       },
       getMovie(movieId) {
-        return this.movies.find((m) => m.movie_id === movieId);
+        const movie = this.movies.find((m) => m.movie_id === movieId);
+        if (movie) {
+          return {
+            ...movie,
+            visible:
+              ["UNKNOWN"].includes(movie.status) || !this.showUnknownOnly,
+          };
+        }
       },
       async updateMovieStatus(movieId, newStatus) {
         // Actualiza la pelicula en el estado de alpine

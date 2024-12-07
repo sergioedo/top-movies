@@ -9,9 +9,35 @@ const topMovies = await getBestMoviesByYear(year);
 
 <div class="container mx-auto px-4 pt-16 mb-16">
   <div class="popular-movies">
-    <h2 class="uppercase tracking-wider text-red-600 text-xl font-semibold">
-      {year}
-    </h2>
+    <div
+      class="flex justify-between"
+      x-data=`{ 
+		get state() {
+			return $store?.globalState?.isShowUnknownOnly() || false;
+			} 
+		}`
+    >
+      <h2 class="uppercase tracking-wider text-red-600 text-xl font-semibold">
+        {year}
+      </h2>
+      <label class="flex items-center">
+        <span
+          class="mr-2 text-white text-xm"
+          x-text="state ? 'Pendientes' : 'Todas'"></span>
+        <div
+          class="w-10 h-6 rounded-full shadow-inner flex items-center transition-all cursor-pointer"
+          :class="state ? 'bg-red-600' : 'bg-gray-300'"
+          x-effect="console.log(state)"
+          @click.stop="$store?.globalState?.setShowUnknownOnly(!state)"
+        >
+          <div
+            class="w-4 h-4 bg-white rounded-full shadow-md transform transition-all"
+            :class="state ? 'translate-x-5' : 'translate-x-1'"
+          >
+          </div>
+        </div>
+      </label>
+    </div>
     <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8"
     >
