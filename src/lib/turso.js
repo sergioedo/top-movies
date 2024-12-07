@@ -84,7 +84,7 @@ export async function getTotalMoviesByYear() {
 
 export async function getBestMoviesByYear(year, minRating = 7) {
 	const query = `
-	  SELECT id, title, release_date, rating, overview, poster_path
+	  SELECT id, title, release_date, rating, overview, poster_path, CAST(strftime('%Y', release_date) as integer) as year
 	  FROM movies
 	  WHERE strftime('%Y', release_date) = ? AND rating >= ?
 	  ORDER BY rating DESC
@@ -113,8 +113,9 @@ export async function saveUserMovie(movieId, userEmail, status) {
 
 export async function getUserMovies(userEmail) {
 	const query = `
-		SELECT movie_id, status, updated_at
-		FROM user_movies
+		SELECT um.movie_id, um.status, um.updated_at, CAST(strftime('%Y', m.release_date) as integer) as year
+		FROM user_movies um
+		LEFT JOIN movies m ON um.movie_id = m.id
 		WHERE user_email = ?`;
 	const { rows } = await client.execute(query, [userEmail]);
 	return rows;

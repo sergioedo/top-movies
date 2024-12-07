@@ -1,53 +1,127 @@
 ---
 const { yearMovies, totalMovies } = Astro.props;
 const { year, movies } = yearMovies;
-const movie = movies[0];
+
+// Primer elemento de las películas para el bloque inferior
+const firstMovie = movies[0];
 ---
 
-<div class="mt-8">
-  <!-- <a href={`/year/${year}`}> -->
-  <!-- <img
-      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-      alt={`${movie.title} Poster`}
-      class="thumbnail hover:opacity-75 transition ease-in-out duration-150"
-      id={`movie-poster-${movie.id}`}
-    /> -->
-  <div class="flex items-center justify-center bg-gray-800">
-    <!-- Contenedor del poster -->
-    <div class="grid grid-cols-2 grid-rows-2 gap-0">
-      {
-        movies.map((movie) => {
-          return (
-            <a href={`/movies/${movie.id}`}>
+<div
+  class="mt-8"
+  x-data=`{ 
+	get yearStats() {
+	  return $store?.globalState?.getYearMoviesStats(${year},${totalMovies}) || { seenMoviesCount: 0, seenPercentage: 0, discardMoviesCount:0, discardPercentage: 0, unseenMoviesCount: ${totalMovies}, unseenPercentage: 100 }
+	  } 
+  }`
+>
+  <div class="relative">
+    <!-- Contenedor de los posters y círculo -->
+    <div class="flex items-center justify-center bg-gray-800 relative">
+      <div class="grid grid-cols-2 grid-rows-2 gap-0">
+        {
+          movies.map((movie) => (
+            <a href={`/movies/${movie.id}`} key={movie.id}>
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={`${movie.title} Poster`}
                 class="thumbnail hover:opacity-75 transition ease-in-out duration-150"
-                id={`movie-poster-${movie.id}`}
               />
             </a>
-          );
-        })
-      }
-    </div>
-  </div>
-  <!-- </a> -->
-  <div class="mt-2">
-    <a href={`/year/${year}`} class="text-lg mt-2 hover:text-gray-300">{year}</a
-    >
-    <div class="flex items-center text-gray-400 text-sm mt-1">
-      <span class="ml-1">TOP&nbsp;</span>
-      <svg class="fill-current text-yellow-500 w-4" viewBox="0 0 24 24"
-        ><g data-name="Layer 2"
-          ><path
-            d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z"
-            data-name="star"></path></g
-        ></svg
+          ))
+        }
+      </div>
+
+      <!-- Círculo con año y barra de progreso -->
+      <div
+        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
-      <span class="ml-1">{Math.round(movie.rating * 10) / 10}</span>
-      <span class="mx-2">|</span>
-      <span>{totalMovies} movies</span>
+        <svg
+          class="w-32 h-32 md:w-24 md:h-24 fill-slate-700"
+          viewBox="0 0 36 36"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- Fondo gris -->
+          <circle
+            cx="18"
+            cy="18"
+            r="16"
+            stroke="#e5e7eb"
+            stroke-width="4"
+            onmouseover="evt.target.setAttribute('fill', 'blue');"></circle>
+          <!-- Películas vistas -->
+          <circle
+            cx="18"
+            cy="18"
+            r="15.915"
+            fill="none"
+            stroke="#34d399"
+            stroke-width="3"
+            :stroke-dasharray="`${yearStats.seenPercentage} ${100 - yearStats.seenPercentage}`"
+            stroke-dashoffset="0"
+            stroke-linecap="round"
+            transform="rotate(-90 18 18)"></circle>
+          <!-- Películas descartadas -->
+          <circle
+            cx="18"
+            cy="18"
+            r="15.915"
+            fill="none"
+            stroke="#f87171"
+            stroke-width="3"
+            :stroke-dasharray="`${yearStats.discardPercentage} ${100 - yearStats.discardPercentage}`"
+            :stroke-dashoffset="`${-yearStats.seenPercentage}`"
+            stroke-linecap="round"
+            transform="rotate(-90 18 18)"></circle>
+          <!-- Películas no vistas -->
+          <circle
+            cx="18"
+            cy="18"
+            r="15.915"
+            fill="none"
+            stroke="#9ca3af"
+            :display="`${yearStats.unseenPercentage > 0 ? 'block' : 'none'}`"
+            stroke-width="3"
+            :stroke-dasharray="`${yearStats.unseenPercentage} ${100 - yearStats.unseenPercentage}`"
+            :stroke-dashoffset="`${-yearStats.seenPercentage - yearStats.discardPercentage}`"
+            stroke-linecap="round"
+            transform="rotate(-90 18 18)"></circle>
+        </svg>
+        <!-- Texto del año y contador -->
+        <a
+          href={`/year/${year}`}
+          class="absolute inset-0 flex flex-col items-center justify-center text-white text-2xl md:text-xl font-bold hover:text-red-600"
+        >
+          <span>{year}</span>
+          <span
+            class="text-sm md:text:xs"
+            x-text={`(yearStats.seenMoviesCount + yearStats.discardMoviesCount) + "/${totalMovies}"`}
+            >{totalMovies}</span
+          >
+        </a>
+      </div>
     </div>
-    <div class="text-gray-400 text-sm">{movie.genres}</div>
+
+    <!-- Bloque inferior -->
+    <!-- <div class="mt-2 relative">
+      <a href={`/year/${year}`} class="text-lg mt-2 hover:text-gray-300">
+        {year}
+      </a>
+      <div class="flex items-center text-gray-400 text-sm mt-1">
+        <span class="ml-1">TOP&nbsp;</span>
+        <svg class="fill-current text-yellow-500 w-4" viewBox="0 0 24 24">
+          <g data-name="Layer 2">
+            <path
+              d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 0 01-.62.18z"
+              data-name="star"></path>
+          </g>
+        </svg>
+        <span class="ml-1">
+          {Math.round(firstMovie.rating * 10) / 10}
+        </span>
+        <span class="mx-2">|</span>
+        <span>{totalMovies} movies</span>
+      </div>
+      <div class="text-gray-400 text-sm">{firstMovie.genres}</div>
+    </div> -->
   </div>
 </div>

@@ -24,7 +24,7 @@ const statusBorderColors = {
   :class="movie ? '' : 'hidden'"
   x-cloak
   @click.stop={actionStatus
-    ? `await Alpine.store('globalState').updateMovieStatus(movie?.movie_id, '${actionStatus}')`
+    ? `await Alpine.store('globalState').updateMovieStatus(movie?.movie_id, '${actionStatus}', movie?.year)`
     : 'console.log("no action")'}
   x-show={`movie && ${JSON.stringify(showStatus)}.includes(movie?.status)`}
   type="button"

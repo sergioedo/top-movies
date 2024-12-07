@@ -92,7 +92,7 @@ const { title } = Astro.props as Props;
           };
         }
       },
-      async updateMovieStatus(movieId, newStatus) {
+      async updateMovieStatus(movieId, newStatus, year) {
         // Actualiza la pelicula en el estado de alpine
         if (this.movies.find((m) => m.movie_id === movieId)) {
           this.movies = this.movies.map((movie) =>
@@ -101,7 +101,7 @@ const { title } = Astro.props as Props;
         } else {
           this.movies = [
             ...this.movies,
-            { movie_id: movieId, status: newStatus },
+            { movie_id: movieId, status: newStatus, year },
           ];
         }
         // Guarda en localstorage
@@ -124,6 +124,41 @@ const { title } = Astro.props as Props;
             // Actualiza la UI según sea necesario
           }
         }
+      },
+      getYearMoviesStats(year, yearMoviesCount) {
+        const yearMovies = this.movies.filter((m) => m.year === year) || [];
+        const seenMoviesCount = yearMovies.filter(
+          (m) => m.status === "WATCHED"
+        ).length;
+        const discardMoviesCount = yearMovies.filter(
+          (m) => m.status === "DISCARD"
+        ).length;
+        const seenPercentage = Math.round(
+          (seenMoviesCount / yearMoviesCount) * 100
+        );
+        const discardPercentage = Math.round(
+          (discardMoviesCount / yearMoviesCount) * 100
+        );
+        console.log({
+          year,
+          yearMoviesCount,
+          seenMoviesCount,
+          discardMoviesCount,
+          unseenMoviesCount:
+            yearMoviesCount - seenMoviesCount - discardMoviesCount,
+          seenPercentage,
+          discardPercentage,
+          unseenPercentage: 100 - seenPercentage - discardPercentage,
+        });
+        return {
+          seenMoviesCount,
+          discardMoviesCount,
+          unseenMoviesCount:
+            yearMoviesCount - seenMoviesCount - discardMoviesCount,
+          seenPercentage,
+          discardPercentage,
+          unseenPercentage: 100 - seenPercentage - discardPercentage,
+        };
       },
     });
   });
