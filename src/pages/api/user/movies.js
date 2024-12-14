@@ -1,11 +1,11 @@
 import { getUserMovies } from '../../../lib/turso.js'
 
-export async function GET({ url }) {
-	const userEmail = url.searchParams.get("user_email");
+export async function GET({ locals }) {
+	const userEmail = locals?.user?.email;
 
 	if (!userEmail) {
 		return new Response(
-			JSON.stringify({ error: "Parámetro 'userEmail' es obligatorio" }),
+			JSON.stringify({ error: "EL usuario es obligatorio" }),
 			{ status: 400, headers: { "Content-Type": "application/json" } }
 		);
 	}

@@ -46,15 +46,14 @@ const { title } = Astro.props as Props;
       showUnknownOnly: true,
       async init() {
         if (localStorage.getItem("user")) {
-          const user = JSON.parse(localStorage.getItem("user"));
-          // TODO: use id_token from localstorage as Bearer authorization header
-          const response = await fetch(
-            "/api/user/movies?user_email=" + user.email,
-            {
-              method: "GET",
-              headers: { "Content-Type": "application/json" },
-            }
-          );
+          const userIdToken = localStorage.getItem("id_token");
+          const response = await fetch("/api/user/movies", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userIdToken}`,
+            },
+          });
 
           if (response.ok) {
             const userMovies = await response.json();
@@ -108,12 +107,14 @@ const { title } = Astro.props as Props;
         this.syncToLocalStorage();
         // save user state (server)
         if (localStorage.getItem("user")) {
-          const user = JSON.parse(localStorage.getItem("user"));
+          const userIdToken = localStorage.getItem("id_token");
           const response = await fetch("/api/user/movies/" + movieId, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userIdToken}`,
+            },
             body: JSON.stringify({
-              userEmail: user.email,
               movieId,
               status: newStatus,
             }),

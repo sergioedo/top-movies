@@ -1,8 +1,9 @@
 import { saveUserMovie } from '../../../../lib/turso.js';
 
-export async function POST({ params, request }) {
+export async function POST({ params, request, locals }) {
 	const movieId = params.id;
-	const { userEmail, status } = await request.json();
+	const userEmail = locals?.user?.email;
+	const { status } = await request.json();
 
 	if (!userEmail || !movieId || !status) {
 		return new Response(
