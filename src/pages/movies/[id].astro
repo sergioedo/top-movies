@@ -3,7 +3,7 @@
 	import Layout from '@layouts/Layout.astro';
 
 	const { id } = Astro.params;
-	const url = `https://api.themoviedb.org/3/movie/${id}?append_to_response=credits,videos,images&api_key=${import.meta.env.TMDB_API_KEY}`;
+	const url = `https://api.themoviedb.org/3/movie/${id}?append_to_response=credits,videos,images&api_key=${import.meta.env.TMDB_API_KEY}&language=es-ES`;
 
 	const response = await fetch(url);
 	const data = await response.json();

@@ -25,7 +25,7 @@ export async function GET({ request }) {
 
 		while (page <= totalPages) {
 			// Llamada a la API de TMDb para obtener las películas filtradas
-			const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&primary_release_year=${year}&vote_average.gte=${ratingThreshold}&vote_count.gte=${votesCountThreshold}&sort_by=vote_average.desc&page=${page}`);
+			const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&language=es-ES&primary_release_year=${year}&vote_average.gte=${ratingThreshold}&vote_count.gte=${votesCountThreshold}&sort_by=vote_average.desc&page=${page}`);
 			const data = await res.json();
 
 			allMovies = [...allMovies, ...data.results];
