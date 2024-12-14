@@ -1,0 +1,92 @@
+---
+import Layout from "@layouts/Layout.astro";
+---
+
+<Layout title="Admin Movies">
+  <section class="flex justify-center items-center min-h-screen bg-slate-700">
+    <div
+      class="bg-slate-800 p-6 rounded-lg shadow-md w-full max-w-md"
+      x-data="adminForm()"
+    >
+      <h1 class="text-2xl font-bold mb-4 text-white text-center">
+        Administración de Películas
+      </h1>
+      <form @submit.prevent="submitForm" class="space-y-4">
+        <!-- Input para el año -->
+        <div>
+          <label for="year" class="block text-sm font-medium text-white mb-1"
+            >Año:</label
+          >
+          <input
+            id="year"
+            type="number"
+            x-model="year"
+            placeholder="Introduce el año (ej. 2023)"
+            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm text-black"
+            required
+          />
+        </div>
+        <!-- Botón de envío -->
+        <div>
+          <button
+            type="submit"
+            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            :disabled="loading"
+          >
+            <span x-show="!loading">Actualizar Películas</span>
+            <span x-show="loading">Actualizando...</span>
+          </button>
+        </div>
+      </form>
+      <!-- Mensajes de éxito o error -->
+      <div x-show="message" class="mt-4">
+        <p
+          x-text="message"
+          :class="{'text-green-600': !isError, 'text-red-600': isError}"
+          class="text-center text-sm"
+        >
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>
+<script is:inline>
+  // @ts-ignore
+  adminForm = function () {
+    return {
+      year: "",
+      loading: false,
+      message: "",
+      isError: false,
+
+      async submitForm() {
+        this.loading = true;
+        this.message = "";
+        this.isError = false;
+
+        try {
+          const userIdToken = localStorage.getItem("id_token");
+          const response = await fetch("/api/tmdb", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userIdToken}`,
+            },
+            body: JSON.stringify({ year: this.year }),
+          });
+
+          if (!response.ok) throw new Error("Error actualizando películas.");
+
+          const data = await response.json();
+          this.message = data.message || "Películas actualizadas con éxito.";
+          this.year = ""; // Resetea el campo tras éxito
+        } catch (error) {
+          this.message = error.message || "Error al conectar con el servidor.";
+          this.isError = true;
+        } finally {
+          this.loading = false;
+        }
+      },
+    };
+  };
+</script>

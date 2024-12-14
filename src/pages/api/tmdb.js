@@ -2,18 +2,28 @@ import fetch from 'node-fetch';
 import { saveMovie, deleteMoviesByYear } from '../../lib/turso.js';
 
 const TMDB_API_KEY = import.meta.env.TMDB_API_KEY;
+const ADMIN_USER_EMAIL = import.meta.env.ADMIN_USER_EMAIL
 
-export async function GET({ request }) {
-	const searchParams = new URL(request.url).searchParams;
+export async function POST({ request, locals }) {
+	const userEmail = locals?.user?.email;
+
+	if (!userEmail || userEmail !== ADMIN_USER_EMAIL) {
+		return new Response(
+			JSON.stringify({ error: "El usuario no es administrador" }),
+			{ status: 400, headers: { "Content-Type": "application/json" } }
+		);
+	}
+
+	const bodyParams = await request.json();
 
 	// Obtener el año actual por defecto
 	const currentYear = new Date().getFullYear();
 
 	// Usar el año actual si no se ha especificado en los query params
-	const year = searchParams.get('year') || currentYear;
-	console.log({ year })
-	const ratingThreshold = searchParams.get('rating') || 7;
-	const votesCountThreshold = searchParams.get('votes') || 1000;
+	const year = bodyParams.year || currentYear;
+	const ratingThreshold = bodyParams.rating || 7;
+	const votesCountThreshold = bodyParams.votes || 1000;
+	console.log({ year, ratingThreshold, votesCountThreshold })
 
 	try {
 		// Borrar las películas del año antes de insertar nuevas

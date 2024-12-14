@@ -1,13 +1,18 @@
 import { verifyGoogleTokenManual } from "./lib/auth";
 
+const isProtectedPath = (path) => {
+	//API: /api, excepts /api/token (public validation)
+	if (path.startsWith('/api') && !path.startsWith('/api/token')) return true;
+	return false;
+}
+
 export async function onRequest(context, next) {
 	console.log('context:', JSON.stringify(context));
 
 	const urlObject = new URL(context.url);
 	const path = urlObject.pathname;
 
-	// Protected Paths: /api, excepts /api/token (public validation)
-	if (path.startsWith('/api') && !path.startsWith('/api/token')) {
+	if (isProtectedPath(path)) {
 		const authHeader = context.request.headers.get("Authorization");
 
 		if (!authHeader || !authHeader.startsWith("Bearer ")) {
