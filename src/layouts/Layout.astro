@@ -126,34 +126,29 @@ const { title } = Astro.props as Props;
       },
       getYearMoviesStats(year, yearMoviesCount) {
         const yearMovies = this.movies.filter((m) => m.year === year) || [];
-        const seenMoviesCount = yearMovies.filter(
+        return this.getMoviesStats(yearMovies, yearMoviesCount);
+      },
+      getAllMoviesStats(totalMoviesCount) {
+        return this.getMoviesStats(this.movies || [], totalMoviesCount);
+      },
+      getMoviesStats(movies, totalMoviesCount) {
+        const seenMoviesCount = movies.filter(
           (m) => m.status === "WATCHED"
         ).length;
-        const discardMoviesCount = yearMovies.filter(
+        const discardMoviesCount = movies.filter(
           (m) => m.status === "DISCARD"
         ).length;
         const seenPercentage = Math.round(
-          (seenMoviesCount / yearMoviesCount) * 100
+          (seenMoviesCount / totalMoviesCount) * 100
         );
         const discardPercentage = Math.round(
-          (discardMoviesCount / yearMoviesCount) * 100
+          (discardMoviesCount / totalMoviesCount) * 100
         );
-        console.log({
-          year,
-          yearMoviesCount,
-          seenMoviesCount,
-          discardMoviesCount,
-          unseenMoviesCount:
-            yearMoviesCount - seenMoviesCount - discardMoviesCount,
-          seenPercentage,
-          discardPercentage,
-          unseenPercentage: 100 - seenPercentage - discardPercentage,
-        });
         return {
           seenMoviesCount,
           discardMoviesCount,
           unseenMoviesCount:
-            yearMoviesCount - seenMoviesCount - discardMoviesCount,
+            totalMoviesCount - seenMoviesCount - discardMoviesCount,
           seenPercentage,
           discardPercentage,
           unseenPercentage: 100 - seenPercentage - discardPercentage,
