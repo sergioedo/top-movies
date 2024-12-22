@@ -41,6 +41,7 @@ const { title } = Astro.props as Props;
   document.addEventListener("alpine:init", () => {
     Alpine.store("globalState", {
       movies: [],
+      nextUserMovies: [],
       showUnknownOnly: true,
       async init() {
         if (localStorage.getItem("user")) {
@@ -58,6 +59,7 @@ const { title } = Astro.props as Props;
             this.movies.push(...userMovies);
             this.syncToLocalStorage();
           }
+          await this.getNextUserMovies();
         } else {
           this.movies.push(
             ...JSON.parse(localStorage.getItem("movies") || "[]")
@@ -77,6 +79,7 @@ const { title } = Astro.props as Props;
       // Limpia el estado global
       clearMovies() {
         this.movies = [];
+        this.nextUserMovies = [];
         this.syncToLocalStorage();
       },
       getMovie(movieId) {
@@ -153,6 +156,25 @@ const { title } = Astro.props as Props;
           discardPercentage,
           unseenPercentage: 100 - seenPercentage - discardPercentage,
         };
+      },
+      async getNextUserMovies() {
+        if (localStorage.getItem("user")) {
+          const userIdToken = localStorage.getItem("id_token");
+          const response = await fetch("/api/user/movies/next", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userIdToken}`,
+            },
+          });
+
+          if (response.ok) {
+            const nextUserMovies = await response.json();
+            this.nextUserMovies.push(...nextUserMovies);
+          }
+        } else {
+          this.nextUserMovies = []; // Estado inicial
+        }
       },
     });
   });

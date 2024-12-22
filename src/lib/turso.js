@@ -120,3 +120,16 @@ export async function getUserMovies(userEmail) {
 	const { rows } = await client.execute(query, [userEmail]);
 	return rows;
 }
+
+export async function getNextUserMovies(userEmail) {
+	const query = `
+		SELECT m.id, m.title, m.release_date, m.rating, m.overview, m.poster_path, CAST(strftime('%Y', m.release_date) as integer) as year
+	  	FROM movies m
+  		LEFT JOIN user_movies um on m.id=um.movie_id
+		WHERE um.status IS NULL OR um.status NOT IN ('WATCHED', 'DISCARD')
+  			AND um.user_email = ?
+		ORDER BY rating desc
+		LIMIT 50`;
+	const { rows } = await client.execute(query, [userEmail]);
+	return rows;
+}

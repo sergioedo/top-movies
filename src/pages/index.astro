@@ -1,10 +1,37 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import YearMoviesList from "@components/YearMoviesList.astro";
+import MoviesProgress from "@components/MoviesProgress.astro";
+import { getTopMoviesByYear, getTotalMoviesByYear } from "../lib/turso";
+import UserNextMovies from "@components/UserNextMovies.astro";
 
-const currentYear = new Date().getFullYear();
+const topMoviesByYear = await getTopMoviesByYear(4);
+const totalMoviesByYear = await getTotalMoviesByYear();
+const totalMovies = Object.keys(totalMoviesByYear).reduce(
+  (totalMovies, year) => {
+    return totalMovies + totalMoviesByYear[year];
+  },
+  0
+);
+const firstYear = topMoviesByYear[0].year;
+const lastYear = topMoviesByYear[topMoviesByYear.length - 1].year;
 ---
 
 <Layout title="Top Movies">
-  <YearMoviesList />
+  <div class="container mx-auto px-4 pt-8 mb-8">
+    <div>
+      <h2 class="tracking-wider text-white text-xl font-semibold">
+        Tus próximas pelis...
+      </h2>
+      <UserNextMovies />
+      <h2 class="tracking-wider text-white text-xl font-semibold">
+        Lo que llevas visto ({firstYear} - {lastYear})
+      </h2>
+      <MoviesProgress totalMovies={totalMovies} />
+      <YearMoviesList
+        topMoviesByYear={topMoviesByYear}
+        totalMoviesByYear={totalMoviesByYear}
+      />
+    </div>
+  </div>
 </Layout>

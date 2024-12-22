@@ -1,0 +1,37 @@
+---
+interface Props {
+  totalMovies: number;
+}
+
+const { totalMovies } = Astro.props;
+---
+
+<div
+  class="relative pt-4 mx-0"
+  x-data=`{ 
+		get allMoviesStats() {
+		  return $store?.globalState?.getAllMoviesStats(${totalMovies}) || { seenMoviesCount: 0, seenPercentage: 0, discardMoviesCount:0, discardPercentage: 0, unseenMoviesCount: ${totalMovies}, unseenPercentage: 100 }
+		} 
+	}`
+>
+  <div class="overflow-hidden h-6 mb-4 text-xs flex rounded bg-white">
+    <div
+      :style="{ width: `${allMoviesStats.discardPercentage}%` }"
+      class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-400"
+    >
+      <span x-text="allMoviesStats.discardMoviesCount"></span>
+    </div>
+    <div
+      :style="{ width: `${allMoviesStats.seenPercentage}%` }"
+      class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-400"
+    >
+      <span x-text="allMoviesStats.seenMoviesCount"></span>
+    </div>
+    <div
+      :style="{ width: `${allMoviesStats.unseenPercentage}%` }"
+      class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gray-400"
+    >
+      <span x-text="allMoviesStats.unseenMoviesCount"></span>
+    </div>
+  </div>
+</div>

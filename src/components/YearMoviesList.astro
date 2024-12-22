@@ -1,66 +1,24 @@
 ---
-import MovieCard from "@components/MovieCard.astro";
 import { getTopMoviesByYear, getTotalMoviesByYear } from "../lib/turso";
 import YearMoviesCard from "./YearMoviesCard.astro";
 
-const topMoviesByYear = await getTopMoviesByYear(4);
-const totalMoviesByYear = await getTotalMoviesByYear();
-const totalMovies = Object.keys(totalMoviesByYear).reduce(
-  (totalMovies, year) => {
-    return totalMovies + totalMoviesByYear[year];
-  },
-  0
-);
-const firstYear = topMoviesByYear[0].year;
-const lastYear = topMoviesByYear[topMoviesByYear.length - 1].year;
+interface Props {
+  topMoviesByYear: any;
+  totalMoviesByYear: any;
+}
+
+const { topMoviesByYear, totalMoviesByYear } = Astro.props;
 ---
 
-<div class="container mx-auto px-4 pt-16 mb-16">
-  <div
-    class="popular-movies"
-    x-data=`{ 
-	get allMoviesStats() {
-	  return $store?.globalState?.getAllMoviesStats(${totalMovies}) || { seenMoviesCount: 0, seenPercentage: 0, discardMoviesCount:0, discardPercentage: 0, unseenMoviesCount: ${totalMovies}, unseenPercentage: 100 }
-	  } 
-  }`
-  >
-    <h2 class="tracking-wider text-white text-xl font-semibold">
-      Lo que llevas visto ({firstYear} - {lastYear})
-    </h2>
-    <div class="relative pt-4 mx-0">
-      <div class="overflow-hidden h-6 mb-4 text-xs flex rounded bg-white">
-        <div
-          :style="{ width: `${allMoviesStats.discardPercentage}%` }"
-          class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-400"
-        >
-          <span x-text="allMoviesStats.discardMoviesCount"></span>
-        </div>
-        <div
-          :style="{ width: `${allMoviesStats.seenPercentage}%` }"
-          class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-400"
-        >
-          <span x-text="allMoviesStats.seenMoviesCount"></span>
-        </div>
-        <div
-          :style="{ width: `${allMoviesStats.unseenPercentage}%` }"
-          class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gray-400"
-        >
-          <span x-text="allMoviesStats.unseenMoviesCount"></span>
-        </div>
-      </div>
-    </div>
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8"
-    >
-      {
-        topMoviesByYear.map((yearMovies) => (
-          <YearMoviesCard
-            yearMovies={yearMovies}
-            totalMovies={totalMoviesByYear[yearMovies.year]}
-          />
-        ))
-      }
-    </div>
-  </div>
-  <!-- end pouplar-movies -->
+<div
+  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8"
+>
+  {
+    topMoviesByYear.map((yearMovies) => (
+      <YearMoviesCard
+        yearMovies={yearMovies}
+        totalMovies={totalMoviesByYear[yearMovies.year]}
+      />
+    ))
+  }
 </div>
