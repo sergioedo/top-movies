@@ -9,6 +9,7 @@ export default defineConfig({
 		}),
 	],
 	secret: import.meta.env.AUTH_SECRET,
+	redirectProxyUrl: import.meta.env.AUTH_URL + '/api/auth',
 	cookies: {
 		sessionToken: {
 			name: "auth.session-token",
