@@ -12,7 +12,9 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server',
-  adapter: vercel(),
-  integrations: [tailwind(), alpinejs(), auth(), react()]
+	output: 'server',
+	adapter: vercel({
+		edgeMiddleware: false
+	}),
+	integrations: [tailwind(), alpinejs(), auth(), react()]
 });
