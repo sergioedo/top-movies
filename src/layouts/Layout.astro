@@ -44,14 +44,11 @@ const { title } = Astro.props as Props;
       nextUserMovies: [],
       showUnknownOnly: true,
       async init() {
-        if (localStorage.getItem("user")) {
-          const userIdToken = localStorage.getItem("id_token");
+        const user = await this.checkUserSession();
+        if (user) {
           const response = await fetch("/api/user/movies", {
             method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${userIdToken}`,
-            },
+            credentials: "include",
           });
 
           if (response.ok) {
@@ -107,14 +104,14 @@ const { title } = Astro.props as Props;
         // Guarda en localstorage
         this.syncToLocalStorage();
         // save user state (server)
-        if (localStorage.getItem("user")) {
-          const userIdToken = localStorage.getItem("id_token");
+        const user = await this.checkUserSession();
+        if (user) {
           const response = await fetch("/api/user/movies/" + movieId, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${userIdToken}`,
             },
+            credentials: "include",
             body: JSON.stringify({
               movieId,
               status: newStatus,
@@ -158,14 +155,14 @@ const { title } = Astro.props as Props;
         };
       },
       async getNextUserMovies() {
-        if (localStorage.getItem("user")) {
-          const userIdToken = localStorage.getItem("id_token");
+        const user = await this.checkUserSession();
+        if (user) {
           const response = await fetch("/api/user/movies/next", {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${userIdToken}`,
             },
+            credentials: "include", // Asegúrate de incluir cookies
           });
 
           if (response.ok) {
@@ -175,6 +172,20 @@ const { title } = Astro.props as Props;
         } else {
           this.nextUserMovies = []; // Estado inicial
         }
+      },
+      async checkUserSession() {
+        const response = await fetch("/api/auth/session", {
+          method: "GET",
+          credentials: "include", // Asegúrate de incluir cookies
+        });
+
+        if (response.ok) {
+          const session = await response.json();
+          if (session) {
+            return session.user; // Información del usuario autenticado
+          }
+        }
+        return null;
       },
     });
   });

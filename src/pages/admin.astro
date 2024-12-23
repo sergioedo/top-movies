@@ -65,13 +65,12 @@ import Layout from "@layouts/Layout.astro";
         this.isError = false;
 
         try {
-          const userIdToken = localStorage.getItem("id_token");
           const response = await fetch("/api/tmdb", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${userIdToken}`,
             },
+            credentials: "include",
             body: JSON.stringify({ year: this.year }),
           });
 
