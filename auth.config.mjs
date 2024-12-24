@@ -22,4 +22,22 @@ export default defineConfig({
 			},
 		},
 	},
+	callbacks: {
+		async redirect({ url, baseUrl }) {
+			// Force AUTH_URL, fallback is not working
+			console.log({ url, baseUrl });
+			const authURL = import.meta.env.AUTH_URL;
+			return authURL;
+			// Default:
+			/*
+			// Allows relative callback URLs
+			if (url.startsWith("/")) return `${baseUrl}${url}`
+
+			// Allows callback URLs on the same origin
+			if (new URL(url).origin === baseUrl) return url
+
+			return baseUrl
+			*/
+		}
+	}
 });
