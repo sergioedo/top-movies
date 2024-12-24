@@ -42,7 +42,7 @@ function Avatar() {
 						title="Cerrar sesión"
 						referrerpolicy="no-referrer"
 					/>
-					<span style={styles.name}>{user.name}</span>
+					<span style={styles.name} class="hidden md:block">{user.name}</span>
 				</div>
 			) : (
 				// Mostrar botón de login si no hay sesión
