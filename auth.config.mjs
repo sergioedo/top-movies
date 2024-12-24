@@ -9,8 +9,8 @@ export default defineConfig({
 		}),
 	],
 	secret: import.meta.env.AUTH_SECRET,
-	trustHost: true, // Confía en el host proporcionado por Vercel
-	redirectProxyUrl: import.meta.env.AUTH_URL + '/api/auth',
+	trustHost: true, // trust host on Vercel
+	redirectProxyUrl: import.meta.env.AUTH_URL + '/api/auth', // required to redirect correctly on Vercel (by default appears internal server port)
 	cookies: {
 		sessionToken: {
 			name: "auth.session-token",
@@ -24,7 +24,7 @@ export default defineConfig({
 	},
 	callbacks: {
 		async redirect({ url, baseUrl }) {
-			// Force AUTH_URL, fallback is not working
+			// Force AUTH_URL as callbackUrl, fallback is not working --> this save the correct cookie value, used in the flow
 			console.log({ url, baseUrl });
 			const authURL = import.meta.env.AUTH_URL;
 			return authURL;
