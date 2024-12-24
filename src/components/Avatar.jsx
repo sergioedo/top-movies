@@ -40,6 +40,7 @@ function Avatar() {
 						style={styles.avatar}
 						onClick={() => signOut()} // Usar signOut de auth-astro
 						title="Cerrar sesión"
+						referrerpolicy="no-referrer"
 					/>
 					<span style={styles.name}>{user.name}</span>
 				</div>
