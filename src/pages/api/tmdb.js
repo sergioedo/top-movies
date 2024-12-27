@@ -23,7 +23,6 @@ export async function POST({ request, locals }) {
 	const year = bodyParams.year || currentYear;
 	const ratingThreshold = bodyParams.rating || 7;
 	const votesCountThreshold = bodyParams.votes || 1000;
-	console.log({ year, ratingThreshold, votesCountThreshold })
 
 	try {
 		// Borrar las películas del año antes de insertar nuevas

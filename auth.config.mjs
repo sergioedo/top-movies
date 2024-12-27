@@ -25,7 +25,6 @@ export default defineConfig({
 	callbacks: {
 		async redirect({ url, baseUrl }) {
 			// Force AUTH_URL as callbackUrl, fallback is not working --> this save the correct cookie value, used in the flow
-			console.log({ url, baseUrl });
 			const authURL = import.meta.env.AUTH_URL;
 			return authURL;
 			// Default:

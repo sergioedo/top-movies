@@ -14,8 +14,6 @@ export async function onRequest(context, next) {
 
 	if (isProtectedPath(path)) {
 		const session = await getSession(context.request);
-		console.log('session', JSON.stringify(session))
-
 		if (!session) {
 			return new Response("Unauthorized: Missing or invalid session", { status: 401 });
 		}
