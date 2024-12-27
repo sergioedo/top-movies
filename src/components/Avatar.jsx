@@ -1,8 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { signIn, signOut } from "auth-astro/client";
+import { useStore } from '@nanostores/react';
+import { $user, setStoredUser, setAnonymousStoredUser } from '../stores/user';
+import { $movies } from '../stores/movies';
+
+const handleSignIn = () => {
+	signIn("google");
+}
 
 function Avatar() {
-	const [user, setUser] = useState(null);
+	const storedUser = useStore($user);
+	// https://github.com/nanostores/persistent/issues/26
+	const [user, setUser] = useState();
+	useEffect(() => {
+		if (storedUser) {
+			setUser(storedUser)
+		}
+	}, [storedUser])
+
+	const movies = useStore($movies);
+
 	const [loading, setLoading] = useState(true);
 
 	// Verificar sesión al cargar
@@ -15,10 +32,13 @@ function Avatar() {
 				});
 				if (response.ok) {
 					const session = await response.json();
-					console.log({ session })
-					setUser(session?.user || null);
+					if (session?.user) {
+						setStoredUser(session.user);
+					} else {
+						setAnonymousStoredUser();
+					}
 				} else {
-					setUser(null);
+					setAnonymousStoredUser();
 				}
 			} catch (error) {
 				console.error("Error al comprobar la sesión:", error);
@@ -29,73 +49,32 @@ function Avatar() {
 		checkSession();
 	}, []);
 
+	const handleSignout = useCallback(() => {
+		setAnonymousStoredUser();
+		signOut();
+	}, [setUser, signOut])
+
 	return (
-		<div style={styles.container}>
-			{user ? (
-				// Mostrar avatar si hay sesión
-				<div style={styles.avatarContainer}>
+		<div className="flex items-center gap-2">
+			{(user && user?.name !== 'anonymous') ? (
+				<div className="flex items-center gap-2 cursor-pointer">
 					<img
 						src={user.image || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"}
 						alt={user.name || "Usuario"}
-						style={styles.avatar}
-						onClick={() => signOut()} // Usar signOut de auth-astro
+						className="w-10 h-10 rounded-full border-2 border-gray-300"
+						onClick={handleSignout}
 						title="Cerrar sesión"
-						referrerpolicy="no-referrer"
+						referrerPolicy="no-referrer"
 					/>
-					<span style={styles.name} class="hidden md:block">{user.name}</span>
+					<span className="hidden md:block text-sm text-white">{user.name}</span>
 				</div>
 			) : (
-				// Mostrar botón de login si no hay sesión
-				<button style={styles.loginButton} onClick={() => signIn("google")}>
+				<button className="bg-blue-500 text-white border-none px-4 py-2 rounded-full cursor-pointer text-sm transition-colors hover:bg-blue-600" onClick={handleSignIn}>
 					Iniciar Sesión
 				</button>
 			)}
 		</div>
 	);
 }
-
-// Estilos inline
-const styles = {
-	container: {
-		display: "flex",
-		alignItems: "center",
-		gap: "10px",
-	},
-	avatarContainer: {
-		display: "flex",
-		alignItems: "center",
-		gap: "8px",
-		cursor: "pointer",
-	},
-	avatar: {
-		width: "40px",
-		height: "40px",
-		borderRadius: "50%",
-		border: "2px solid #ddd",
-	},
-	name: {
-		fontSize: "14px",
-		color: "#ffffff",
-	},
-	loginButton: {
-		backgroundColor: "#4285F4",
-		color: "white",
-		border: "none",
-		padding: "8px 16px",
-		borderRadius: "20px",
-		cursor: "pointer",
-		fontSize: "14px",
-		transition: "background-color 0.3s",
-	},
-	loading: {
-		fontSize: "14px",
-		color: "#999",
-	},
-};
-
-// Cambiar color al hover del botón
-styles.loginButton[":hover"] = {
-	backgroundColor: "#357ae8",
-};
 
 export default Avatar;
