@@ -1,25 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { signIn, signOut } from "auth-astro/client";
-import { useStore } from '@nanostores/react';
-import { $user, setStoredUser, setAnonymousStoredUser } from '../stores/user';
-import { $movies } from '../stores/movies';
+import { useUser } from '../hooks/useUser';
 
 const handleSignIn = () => {
 	signIn("google");
 }
 
 function Avatar() {
-	const storedUser = useStore($user);
-	// https://github.com/nanostores/persistent/issues/26
-	const [user, setUser] = useState();
-	useEffect(() => {
-		if (storedUser) {
-			setUser(storedUser)
-		}
-	}, [storedUser])
-
-	const movies = useStore($movies);
-
+	const [user, setUser] = useUser();
 	const [loading, setLoading] = useState(true);
 
 	// Verificar sesión al cargar
@@ -32,13 +20,9 @@ function Avatar() {
 				});
 				if (response.ok) {
 					const session = await response.json();
-					if (session?.user) {
-						setStoredUser(session.user);
-					} else {
-						setAnonymousStoredUser();
-					}
+					setUser(session?.user);
 				} else {
-					setAnonymousStoredUser();
+					setUser();
 				}
 			} catch (error) {
 				console.error("Error al comprobar la sesión:", error);
@@ -50,7 +34,7 @@ function Avatar() {
 	}, []);
 
 	const handleSignout = useCallback(() => {
-		setAnonymousStoredUser();
+		setUser();
 		signOut();
 	}, [setUser, signOut])
 
