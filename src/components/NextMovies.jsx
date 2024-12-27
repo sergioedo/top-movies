@@ -1,7 +1,4 @@
-
-import React, { useState, useEffect } from "react";
-import { useStore } from '@nanostores/react';
-import { $nextUserMovies } from '../stores/movies';
+import { useUserMovies } from '../hooks/useUserMovies';
 
 const MovieCard = ({ movie }) => {
 	const movieUrL = `/movies/${movie.id}`
@@ -41,18 +38,10 @@ const MovieCard = ({ movie }) => {
 }
 
 const NextMovies = ({ initialNextMovies = [] }) => {
-	const storedNextMovies = useStore($nextUserMovies);
-	// https://github.com/nanostores/persistent/issues/26
-	const [nextMovies, setNextMovies] = useState(initialNextMovies);
-	useEffect(() => {
-		if (storedNextMovies) {
-			setNextMovies(storedNextMovies)
-		}
-	}, [storedNextMovies])
-	console.log({ nextMovies, storedNextMovies });
+	const { nextUserMovies } = useUserMovies({ initialNextMovies });
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-8">
-			{nextMovies && nextMovies.map(movie => <MovieCard key={movie.id} movie={movie} />)}
+			{nextUserMovies && nextUserMovies.map(movie => <MovieCard key={movie.id} movie={movie} />)}
 		</div>
 	)
 }

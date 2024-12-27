@@ -11,7 +11,7 @@ export const $movies = persistentMap('nano-movies:', {
 	[anonymousUser.email]: []
 }, storageEncoding)
 
-export const $nextUserMovies = computed($user, user => task(async () => {
+export const $nextUserMovies = computed([$user, $movies], user => task(async () => {
 	try {
 		if (!isAnonymousUser(user)) {
 			const response = await fetch("/api/user/movies/next", {
