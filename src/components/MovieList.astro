@@ -1,5 +1,6 @@
 ---
 import MovieCard from "@components/MovieCard.astro";
+import MovieFilters from "./MovieFilters";
 import { getBestMoviesByYear } from "../lib/turso";
 
 const { year } = Astro.props;
@@ -20,23 +21,7 @@ const topMovies = await getBestMoviesByYear(year);
       <h2 class="uppercase tracking-wider text-red-600 text-xl font-semibold">
         {year}
       </h2>
-      <label class="flex items-center">
-        <span
-          class="mr-2 text-white text-xm"
-          x-text="state ? 'Pendientes' : 'Todas'"></span>
-        <div
-          class="w-10 h-6 rounded-full shadow-inner flex items-center transition-all cursor-pointer"
-          :class="state ? 'bg-red-600' : 'bg-gray-300'"
-          x-effect="console.log(state)"
-          @click.stop="$store?.globalState?.setShowUnknownOnly(!state)"
-        >
-          <div
-            class="w-4 h-4 bg-white rounded-full shadow-md transform transition-all"
-            :class="state ? 'translate-x-5' : 'translate-x-1'"
-          >
-          </div>
-        </div>
-      </label>
+      <MovieFilters client:load />
     </div>
     <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8"

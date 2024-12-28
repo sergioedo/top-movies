@@ -1,4 +1,4 @@
-import { persistentMap } from '@nanostores/persistent'
+import { persistentAtom, persistentMap } from '@nanostores/persistent'
 import { $user, anonymousUser, isAnonymousUser } from './user'
 import { computed, task } from 'nanostores'
 
@@ -10,6 +10,11 @@ const storageEncoding = {
 export const $movies = persistentMap('nano-movies:', {
 	[anonymousUser.email]: []
 }, storageEncoding)
+
+export const defaultMovieFilters = {
+	showPendingMovies: true
+}
+export const $movieFilters = persistentAtom('nano-movie-filters', defaultMovieFilters, storageEncoding)
 
 export const $nextUserMovies = computed([$user, $movies], user => task(async () => {
 	try {
