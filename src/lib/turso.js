@@ -113,7 +113,7 @@ export async function saveUserMovie(movieId, userEmail, status) {
 
 export async function getUserMovies(userEmail) {
 	const query = `
-		SELECT um.movie_id, um.status, um.updated_at, CAST(strftime('%Y', m.release_date) as integer) as year
+		SELECT um.movie_id as id, um.status, um.updated_at, CAST(strftime('%Y', m.release_date) as integer) as year
 		FROM user_movies um
 		LEFT JOIN movies m ON um.movie_id = m.id
 		WHERE user_email = ?`;

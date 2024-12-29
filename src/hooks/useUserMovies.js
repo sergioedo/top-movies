@@ -1,9 +1,13 @@
-import { $nextUserMovies } from '../stores/movies';
+import { $movies, $nextUserMovies, getUserMovies, updateMovieStatus } from '../stores/movies';
 import useStoreState from "./useStoreState";
 
-export const useUserMovies = ({ initialNextMovies = [] }) => {
-	const nextUserMovies = useStoreState($nextUserMovies, initialNextMovies);
+export const useUserMovies = (props = { initialNextMovies: [] }) => {
+	const userMovies = useStoreState($movies, []);
+	const nextUserMovies = useStoreState($nextUserMovies, props.initialNextMovies);
 	return {
-		nextUserMovies
+		userMovies,
+		nextUserMovies,
+		getUserMovies,
+		updateMovieStatus,
 	}
 }

@@ -3,7 +3,6 @@ import { useMovieFilters } from "hooks/useMovieFilters";
 const MovieFilters = () => {
 	const [movieFilters, setMovieFilters] = useMovieFilters()
 	const { showPendingMovies } = movieFilters
-	console.log({ showPendingMovies })
 	const handleFilterPendings = () => {
 		setMovieFilters({
 			...movieFilters,
