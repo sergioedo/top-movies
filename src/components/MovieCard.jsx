@@ -93,10 +93,9 @@ const StatusButton = ({ status, showStatus, actionStatus, iconStatus, opacity, s
 	)
 }
 
-const MovieCard = ({ initialMovie }) => {
+export const MovieCard = ({ initialMovie, isVisible }) => {
 	const [movie, setMovie] = useState(initialMovie)
 	const { userMovies, getUserMovies, updateMovieStatus } = useUserMovies()
-	const [movieFilters,] = useMovieFilters()
 
 	useEffect(() => {
 		const userMovie = getUserMovies().find((m) => m.id === movie.id);
@@ -104,10 +103,10 @@ const MovieCard = ({ initialMovie }) => {
 			setMovie({
 				...movie,
 				...userMovie,
-				visible: ["UNKNOWN"].includes(userMovie.status) || !movieFilters?.showPendingMovies,
+				visible: isVisible({ status: 'UNKNOWN', ...movie, ...userMovie }),
 			})
 		}
-	}, [userMovies, getUserMovies, movieFilters])
+	}, [userMovies, getUserMovies, isVisible])
 
 	const handleStatusChange = useCallback((newStatus) => {
 		updateMovieStatus(movie.id, newStatus, movie.year)
@@ -195,4 +194,8 @@ const MovieCard = ({ initialMovie }) => {
 	)
 }
 
-export default MovieCard
+export const FiltrableMovieCard = ({ initialMovie }) => {
+	const [movieFilters,] = useMovieFilters()
+	const isVisible = useCallback((movie) => ["UNKNOWN"].includes(movie.status) || !movieFilters?.showPendingMovies, [movieFilters])
+	return <MovieCard initialMovie={initialMovie} isVisible={isVisible} />
+}

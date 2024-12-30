@@ -1,5 +1,5 @@
 ---
-import MovieCard from "@components/MovieCard";
+import { FiltrableMovieCard } from "@components/MovieCard";
 import MovieFilters from "./MovieFilters";
 import { getBestMoviesByYear } from "../lib/turso";
 
@@ -21,8 +21,8 @@ const topMovies = await getBestMoviesByYear(year);
     >
       {
         topMovies.map((movie) => (
-          <MovieCard
-            client:load
+          <FiltrableMovieCard
+            client:visible
             initialMovie={{ ...movie, status: "UNKNOWN", visible: true }}
           />
         ))

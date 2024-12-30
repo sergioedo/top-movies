@@ -1,7 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import YearMoviesList from "@components/YearMoviesList.astro";
-import MoviesProgress from "@components/MoviesProgress.astro";
+import MoviesProgress from "@components/MoviesProgress";
 import { getTopMoviesByYear, getTotalMoviesByYear } from "../lib/turso";
 import UserNextMovies from "@components/UserNextMovies.astro";
 
@@ -13,6 +13,14 @@ const totalMovies = Object.keys(totalMoviesByYear).reduce(
   },
   0
 );
+const initialTotalMoviesStats = {
+  seenMoviesCount: 0,
+  seenPercentage: 0,
+  discardMoviesCount: 0,
+  discardPercentage: 0,
+  unseenMoviesCount: totalMovies,
+  unseenPercentage: 100,
+};
 const firstYear = topMoviesByYear[0].year;
 const lastYear = topMoviesByYear[topMoviesByYear.length - 1].year;
 ---
@@ -27,7 +35,11 @@ const lastYear = topMoviesByYear[topMoviesByYear.length - 1].year;
       <h2 class="tracking-wider text-white text-xl font-semibold">
         Lo que llevas visto ({firstYear} - {lastYear})
       </h2>
-      <MoviesProgress totalMovies={totalMovies} />
+      <MoviesProgress
+        client:load
+        initialStats={initialTotalMoviesStats}
+        totalMovies={totalMovies}
+      />
       <YearMoviesList
         topMoviesByYear={topMoviesByYear}
         totalMoviesByYear={totalMoviesByYear}

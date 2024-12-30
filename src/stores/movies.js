@@ -63,6 +63,7 @@ $user.listen(async (currentUser, previousUser) => {
 	}
 })
 
+// Next movies
 export const $nextUserMovies = computed([$user, $movies], user => task(async () => {
 	try {
 		if (!isAnonymousUser(user)) {
@@ -83,6 +84,39 @@ export const $nextUserMovies = computed([$user, $movies], user => task(async () 
 		// ERROR: cannot get nextUserMovies
 	}
 }))
+
+// User Movie Statistics
+const getMoviesStats = (movies, totalMoviesCount) => {
+	const seenMoviesCount = movies.filter(
+		(m) => m.status === "WATCHED"
+	).length;
+	const discardMoviesCount = movies.filter(
+		(m) => m.status === "DISCARD"
+	).length;
+	const seenPercentage = Math.round(
+		(seenMoviesCount / totalMoviesCount) * 100
+	);
+	const discardPercentage = Math.round(
+		(discardMoviesCount / totalMoviesCount) * 100
+	);
+	return {
+		seenMoviesCount,
+		discardMoviesCount,
+		unseenMoviesCount:
+			totalMoviesCount - seenMoviesCount - discardMoviesCount,
+		seenPercentage,
+		discardPercentage,
+		unseenPercentage: 100 - seenPercentage - discardPercentage,
+	};
+}
+
+export const getYearMoviesStats = (year, yearMoviesCount) => {
+	const yearMovies = getUserMovies().filter((m) => m.year === year) || [];
+	return getMoviesStats(yearMovies, yearMoviesCount);
+}
+export const getAllMoviesStats = (totalMoviesCount) => {
+	return getMoviesStats(getUserMovies(), totalMoviesCount);
+}
 
 // Movie Filters:
 export const defaultMovieFilters = {
