@@ -53,9 +53,19 @@ function Avatar() {
 					<span className="hidden md:block text-sm text-white">{user.name}</span>
 				</div>
 			) : (
-				<button className="bg-blue-500 text-white border-none px-4 py-2 rounded-full cursor-pointer text-sm transition-colors hover:bg-blue-600" onClick={handleSignIn}>
-					Iniciar Sesión
-				</button>
+				// <button className="bg-blue-500 text-white border-none px-4 py-2 rounded-full cursor-pointer text-sm transition-colors hover:bg-blue-600" onClick={handleSignIn}>
+				// 	Iniciar Sesión
+				// </button>
+				<div className="flex items-center gap-2 cursor-pointer">
+					<img
+						src={"https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"}
+						alt={"Usuario"}
+						className="w-10 h-10 rounded-full border-2 border-gray-300"
+						onClick={handleSignIn}
+						title="Iniciar sesión"
+						referrerPolicy="no-referrer"
+					/>
+				</div>
 			)}
 		</div>
 	);

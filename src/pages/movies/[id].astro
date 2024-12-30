@@ -30,12 +30,9 @@
 		images: data.images.backdrops.slice(0, 9),
 	}
 	---
-	<Layout title="Movie Detail">
+	<Layout title="Movie Detail" backButton={true}>
 		<div class="movie-info border-b border-gray-800">
-			<div class="container mx-auto px-4 py-4 flex flex-row">
-				<BackButton />
-			</div>
-			<div class="container mx-auto px-4 py-4 flex flex-col md:flex-row">
+			<div class="container mx-auto px-4 py-8 flex flex-col md:flex-row">
 				<div class="flex-none">
 					<img src={movie.poster_path} alt={`${movie.title} Poster`} class="movie-poster w-64 lg:w-96" id="movie-poster">
 				</div>

@@ -3,13 +3,13 @@ import Layout from "@layouts/Layout.astro";
 import BackButton from "@components/BackButton.astro";
 ---
 
-<Layout title="Admin Movies">
+<Layout title="Admin Movies" backButton={false}>
   <div class="container mx-auto px-4 py-4 flex flex-row">
-    <BackButton />
+    <BackButton visible={true} text="Volver" />
   </div>
   <section class="flex justify-center items-center min-h-screen bg-slate-700">
     <div
-      class="bg-slate-800 p-6 rounded-lg shadow-md w-full max-w-md"
+      class="bg-slate-800 p-6 rounded-lg shadow-md w-auto max-w-md"
       x-data="adminForm()"
     >
       <h1 class="text-2xl font-bold mb-4 text-white text-center">
