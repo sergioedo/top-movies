@@ -6,6 +6,6 @@ import BackButton from "@components/BackButton.astro";
 const { year } = Astro.params;
 ---
 
-<Layout title="Top Movies" backButton={true}>
+<Layout title={`Top Pelis - ${year}`} backButton={true}>
   <MovieList year={year} />
 </Layout>
