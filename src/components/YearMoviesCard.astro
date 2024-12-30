@@ -16,14 +16,7 @@ const initialYearStats = {
 //const firstMovie = movies[0];
 ---
 
-<div
-  class="mt-8"
-  x-data=`{ 
-	get yearStats() {
-	  return $store?.globalState?.getYearMoviesStats(${year},${totalMovies}) || { seenMoviesCount: 0, seenPercentage: 0, discardMoviesCount:0, discardPercentage: 0, unseenMoviesCount: ${totalMovies}, unseenPercentage: 100 }
-	  } 
-  }`
->
+<div class="mt-8">
   <div class="relative">
     <!-- Contenedor de los posters y círculo -->
     <div class="flex items-center justify-center bg-gray-800 relative">

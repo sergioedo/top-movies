@@ -4,8 +4,6 @@ import vercel from '@astrojs/vercel/serverless';
 
 import tailwind from '@astrojs/tailwind';
 
-import alpinejs from '@astrojs/alpinejs';
-
 import auth from 'auth-astro';
 
 import react from '@astrojs/react';
@@ -16,5 +14,5 @@ export default defineConfig({
 	adapter: vercel({
 		edgeMiddleware: false
 	}),
-	integrations: [tailwind(), alpinejs(), auth(), react()]
+	integrations: [tailwind(), auth(), react()]
 });
