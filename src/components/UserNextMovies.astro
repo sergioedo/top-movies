@@ -5,4 +5,4 @@ import { getNextUserMovies } from "lib/turso";
 const nextAnonymousMovies = await getNextUserMovies(); // default movies without user (anonymous)
 ---
 
-<NextMovies initialNextMovies={nextAnonymousMovies.slice(0, 5)} client:load />
+<NextMovies initialNextMovies={nextAnonymousMovies.slice(0, 10)} client:load />

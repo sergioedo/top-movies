@@ -1,6 +1,7 @@
 import { useMovieFilters } from "hooks/useMovieFilters"
 import { useUserMovies } from "hooks/useUserMovies"
 import { useCallback, useEffect, useState } from "react"
+import Stamp from "./Stamp";
 
 
 const statusBorderColors = {
@@ -18,7 +19,7 @@ const StatusButton = ({ status, showStatus, actionStatus, iconStatus, opacity, s
 	return (
 		<button
 			id={`watched-button-${showStatus}-${size ? size : "big"}`}
-			className={`bg-slate-600 ${actionStatus ? "hover:bg-slate-700" : ""} border-2 ${statusBorderColors[iconStatus]} ${opacity ? "opacity-90 hover:opacity-100" : ""} text-white font-bold ${size === "small" ? "py-2 px-2" : "py-4 px-4"} rounded-full mx-2 mt-2 ${actionStatus ? "pointer-events-auto" : ""} transition ease-in-out duration-300 ${showStatus.includes(status) ? '' : 'hidden'}`}
+			className={`bg-slate-600 ${actionStatus ? "hover:bg-slate-700" : ""} border-2 ${statusBorderColors[iconStatus]} ${opacity ? "opacity-90 hover:opacity-100" : ""} text-white font-bold ${size === "small" ? "p-2" : "p-4"} rounded-full m-2 ${actionStatus ? "pointer-events-auto" : ""} transition ease-in-out duration-300 ${showStatus.includes(status) ? '' : 'hidden'}`}
 			onClick={handleClick}
 			type="button"
 		>
@@ -93,7 +94,48 @@ const StatusButton = ({ status, showStatus, actionStatus, iconStatus, opacity, s
 	)
 }
 
-export const MovieCard = ({ initialMovie, isVisible }) => {
+const MovieImage = ({ movie }) => {
+	const imgUrl = movie.poster_url ? movie.poster_url : `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+	return (
+		<img
+			src={imgUrl}
+			alt={`${movie.title} Poster`}
+			className={`hover:opacity-75 transition ease-in-out duration-300 ${['WATCHED', 'DISCARD'].includes(movie.status) ? 'grayscale' : 'grayscale-0'} rounded-l-lg`}
+			id={`movie-poster-${movie.id}`}
+		/>
+	)
+}
+
+const MovieDetail = ({ movie }) => {
+	const movieUrL = `/movies/${movie.id}`
+	return (
+		<div className="mt-2 mb-8">
+			<a href={movieUrL}
+				className="text-lg mt-2 hover:text-gray-300"
+			>{movie.title}</a>
+			<div className="flex items-center justify-center text-gray-400 text-sm mt-1">
+				<svg className="fill-current text-yellow-500 w-4" viewBox="0 0 24 24"
+				><g dataname="Layer 2"
+				><path
+					d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z"
+					dataname="star"></path></g						></svg>
+				<span className="ml-1">{Math.round((movie.rating || 0) * 10) / 10}</span>
+				<span className="mx-2">|</span>
+				<span>{movie.release_date}</span>
+			</div>
+			<div className="text-gray-400 text-sm">{movie.genres}</div>
+
+			{/* <!-- Overview --> */}
+			<div className="mt-4 p-2 flex-1 justify-center hidden md:block">
+				<p className="text-sm text-gray-300 line-clamp-5">
+					{movie.overview ? movie.overview : "No hay descripción disponible."}
+				</p>
+			</div>
+		</div>
+	)
+}
+
+export const MovieCard = ({ initialMovie, isVisible, fullDetail }) => {
 	const [movie, setMovie] = useState(initialMovie)
 	const { userMovies, getUserMovies, updateMovieStatus } = useUserMovies()
 
@@ -113,84 +155,72 @@ export const MovieCard = ({ initialMovie, isVisible }) => {
 	}, [movie, updateMovieStatus])
 
 	const movieUrL = `/movies/${movie.id}`
-	const imgUrl = movie.poster_url ? movie.poster_url : `https://image.tmdb.org/t/p/w500${movie.poster_path}`
 
 	return (
-		<div className={`mt-8 ${movie.visible ? '' : 'hidden'}`}>
-			<div className="relative">
-				<a href={movieUrL} className="block relative z-10">
-					<img src={imgUrl}
-						alt={`${movie.title} Poster`}
-						className={`thumbnail hover:opacity-75 transition ease-in-out duration-300 ${['WATCHED', 'DISCARD'].includes(movie.status) ? 'grayscale' : 'grayscale-0'}`}
-						id={`movie-poster-${movie.id}`}
-					/>
-				</a>
-				<div
-					className="absolute top-0 right-0 flex flex-col justify-between px-0 py-0 pointer-events-none z-20"
-				>
-					<StatusButton
-						status={movie.status}
-						showStatus={["WATCHED"]}
-						iconStatus="WATCHED"
-						size="small"
-					/>
-					<StatusButton
-						status={movie.status}
-						showStatus={["DISCARD"]}
-						iconStatus="DISCARD"
-						size="small"
-					/>
-					<StatusButton
-						status={movie.status}
-						showStatus={["WATCHED", "DISCARD"]}
-						iconStatus="UNDO"
-						actionStatus="UNKNOWN"
-						onChangeStatus={handleStatusChange}
-						size="small"
-						opacity={true}
-					/>
-				</div>
+		<div className={`bg-slate-800 ${movie.visible ? '' : 'hidden'}`}>
+			<div className="flex flex-col md:flex-row h-full min-h-[300px]">
+				{/* Caratula */}
+				<div className={`relative ${fullDetail ? 'md:w-1/2' : ''}`}>
+					<a href={movieUrL} className="block relative z-10">
+						<MovieImage movie={movie} />
+					</a>
+					<div className="absolute top-0 z-10 flex items-center justify-center text-white text-md p-1 m-4 bg-slate-800 rounded-lg opacity-90">
+						<svg className="fill-current text-yellow-500 w-4" viewBox="0 0 24 24"
+						><g dataname="Layer 2"
+						><path
+							d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z"
+							dataname="star"></path></g						></svg>
+						<span className="ml-1">{Math.round((movie.rating || 0) * 10) / 10}</span>
+						{/* <span className="mx-2">|</span> */}
+						{/* <span>{movie.release_date}</span> */}
+					</div>
 
-				{/* <!-- Botones flotantes en la parte inferior --> */}
-				<div
-					className="absolute inset-x-0 bottom-0 flex justify-between px-4 py-2 pointer-events-none z-20"
-				>
-					<StatusButton
-						status={movie.status}
-						iconStatus="WATCHED"
-						actionStatus="WATCHED"
-						onChangeStatus={handleStatusChange}
-						showStatus={["UNKNOWN"]}
-						opacity={true}
-					/>
-					<StatusButton
-						status={movie.status}
-						iconStatus="DISCARD"
-						actionStatus="DISCARD"
-						onChangeStatus={handleStatusChange}
-						showStatus={["UNKNOWN"]}
-						opacity={true}
-					/>
-				</div>
-			</div>
+					<div className="absolute top-0 right-0 z-10 flex items-center justify-center text-white text-md p-1 m-4 bg-slate-800 rounded-lg opacity-90">
+						<span>{movie.release_date?.split('-')[0]}</span>
+					</div>
 
-			<div className="mt-2">
-				<a href={movieUrL}
-					className="text-lg mt-2 hover:text-gray-300"
-				>{movie.title}</a>
-				<div className="flex items-center text-gray-400 text-sm mt-1">
-					<svg className="fill-current text-yellow-500 w-4" viewBox="0 0 24 24"
-					><g dataname="Layer 2"
-					><path
-						d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z"
-						dataname="star"></path></g						></svg>
-					<span className="ml-1">{Math.round((movie.rating || 0) * 10) / 10}</span>
-					<span className="mx-2">|</span>
-					<span>{movie.release_date}</span>
+					{["WATCHED", "DISCARD"].includes(movie.status) &&
+						<div className="absolute top-[45%] left-[45%] translate-x-[-50%] z-10 flex items-center justify-center text-white text-md p-1 m-4">
+							<Stamp text={movie.status === 'WATCHED' ? 'YA LA HE VISTO!' : 'NO LA QUIERO VER...'} color={movie.status === 'WATCHED' ? 'green' : 'red'} />
+						</div>
+					}
+
+					{/* <!-- Botones flotantes en la parte inferior --> */}
+					<div
+						className="absolute inset-x-0 bottom-0 flex justify-center gap-8 mb-4 px-4 py-4 pointer-events-none z-20"
+					>
+						<StatusButton
+							status={movie.status}
+							iconStatus="WATCHED"
+							actionStatus="WATCHED"
+							onChangeStatus={handleStatusChange}
+							showStatus={["UNKNOWN"]}
+							opacity={true}
+						/>
+						<StatusButton
+							status={movie.status}
+							iconStatus="UNDO"
+							actionStatus="UNKNOWN"
+							onChangeStatus={handleStatusChange}
+							showStatus={["WATCHED", "DISCARD"]}
+							opacity={true}
+						/>
+						<StatusButton
+							status={movie.status}
+							iconStatus="DISCARD"
+							actionStatus="DISCARD"
+							onChangeStatus={handleStatusChange}
+							showStatus={["UNKNOWN"]}
+							opacity={true}
+						/>
+					</div>
 				</div>
-				<div className="text-gray-400 text-sm">{movie.genres}</div>
+				{/* Ficha/Detalle */}
+				{/* <div className={`${fullDetail ? 'md:w-1/2' : ''} rounded-r-lg`}>
+					<MovieDetail movie={movie} />
+				</div> */}
 			</div>
-		</div >
+		</div>
 	)
 }
 

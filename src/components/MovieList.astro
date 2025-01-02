@@ -11,7 +11,9 @@ const topMovies = await getBestMoviesByYear(year);
 <div class="container mx-auto px-4 pt-4 mb-16">
   <div>
     <div class="flex justify-between">
-      <h2 class="uppercase tracking-wider text-red-600 text-xl font-semibold">
+      <h2
+        class="uppercase tracking-wider text-red-600 text-xl font-semibold py-4"
+      >
         {year}
       </h2>
       <MovieFilters client:load />
