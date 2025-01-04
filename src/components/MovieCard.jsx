@@ -188,7 +188,7 @@ export const MovieCard = ({ initialMovie, isVisible = returnTrue, fullDetail }) 
 
 					{/* <!-- Botones flotantes en la parte inferior --> */}
 					<div
-						className="absolute inset-x-0 bottom-0 flex justify-center gap-8 mb-4 px-4 py-4 pointer-events-none z-20"
+						className="absolute inset-x-0 bottom-0 flex justify-center gap-8 md:gap-4 mb-4 px-4 py-4 pointer-events-none z-20"
 					>
 						<StatusButton
 							status={movie.status}
