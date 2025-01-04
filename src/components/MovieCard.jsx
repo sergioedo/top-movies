@@ -135,7 +135,8 @@ const MovieDetail = ({ movie }) => {
 	)
 }
 
-export const MovieCard = ({ initialMovie, isVisible, fullDetail }) => {
+const returnTrue = () => true
+export const MovieCard = ({ initialMovie, isVisible = returnTrue, fullDetail }) => {
 	const [movie, setMovie] = useState(initialMovie)
 	const { userMovies, getUserMovies, updateMovieStatus } = useUserMovies()
 
@@ -158,7 +159,7 @@ export const MovieCard = ({ initialMovie, isVisible, fullDetail }) => {
 
 	return (
 		<div className={`bg-slate-800 ${movie.visible ? '' : 'hidden'}`}>
-			<div className="flex flex-col md:flex-row h-full min-h-[300px]">
+			<div className="flex flex-col md:flex-row h-full">
 				{/* Caratula */}
 				<div className={`relative ${fullDetail ? 'md:w-1/2' : ''}`}>
 					<a href={movieUrL} className="block relative z-10">
@@ -180,8 +181,8 @@ export const MovieCard = ({ initialMovie, isVisible, fullDetail }) => {
 					</div>
 
 					{["WATCHED", "DISCARD"].includes(movie.status) &&
-						<div className="absolute top-[45%] left-[45%] translate-x-[-50%] z-10 flex items-center justify-center text-white text-md p-1 m-4">
-							<Stamp text={movie.status === 'WATCHED' ? 'YA LA HE VISTO!' : 'NO LA QUIERO VER...'} color={movie.status === 'WATCHED' ? 'green' : 'red'} />
+						<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-10 flex items-center justify-center text-white text-md">
+							<Stamp text={movie.status === 'WATCHED' ? 'YA LA HE VISTO!' : 'NO LA QUIERO VER'} color={movie.status === 'WATCHED' ? 'green' : 'red'} />
 						</div>
 					}
 
