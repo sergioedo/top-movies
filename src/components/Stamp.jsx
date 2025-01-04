@@ -13,7 +13,7 @@ const colors = {
 const Stamp = ({ text, color }) => {
 	const _color = colors[color]
 	return (
-		<div className={`${_color.text} text-2xl md:text-xs text-nowrap font-bold uppercase tracking-widest ${_color.bg} bg-opacity-85 border-4 ${_color.border} rounded-lg px-4 py-2 shadow-lg transform rotate-[-25deg]`}>
+		<div className={`${_color.text} text-2xl md:text-xs text-nowrap font-bold uppercase tracking-widest ${_color.bg} bg-opacity-90 border-4 ${_color.border} rounded-lg px-2 py-2 shadow-lg transform rotate-[-0deg]`}>
 			{text}
 		</div>
 	)
