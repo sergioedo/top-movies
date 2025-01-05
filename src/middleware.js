@@ -1,7 +1,7 @@
 import { getSession } from 'auth-astro/server';
 
 const isProtectedPath = (path) => {
-	//API: /api, excepts /api/token (public validation)
+	//API: /api, excepts /api/auth (public validation)
 	if (path.startsWith('/api') && !path.startsWith('/api/auth')) return true;
 	if (path.startsWith('/admin')) return true;
 	return false;
