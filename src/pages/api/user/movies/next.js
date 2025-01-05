@@ -11,7 +11,11 @@ export async function GET({ locals }) {
 	}
 
 	try {
-		const movies = await getNextUserMovies(userEmail);
+		const movies = (await getNextUserMovies(userEmail)).map((movie) => ({
+			...movie,
+			status: "UNKNOWN",
+			visible: true,
+		}));
 
 		return new Response(JSON.stringify(movies), {
 			status: 200,

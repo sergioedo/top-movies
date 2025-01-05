@@ -9,7 +9,7 @@ const MoviesProgress = ({ initialStats, totalMovies }) => {
 	}, [userMovies])
 
 	return (
-		<div className="relative pt-4 mx-0">
+		<div className="relative mx-0">
 			<div className="overflow-hidden h-6 mb-4 text-xs flex rounded bg-white">
 				<div
 					style={{ width: `${allMoviesStats.discardPercentage}%` }}

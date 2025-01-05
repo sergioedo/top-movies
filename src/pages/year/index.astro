@@ -2,12 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import YearMoviesList from "@components/YearMoviesList.astro";
 import MoviesProgress from "@components/MoviesProgress";
-import {
-  getNextUserMovies,
-  getTopMoviesByYear,
-  getTotalMoviesByYear,
-} from "../lib/turso";
-import { NextMoviesList } from "@components/MoviesList";
+import { getTopMoviesByYear, getTotalMoviesByYear } from "../../lib/turso";
 
 const topMoviesByYear = await getTopMoviesByYear(4);
 const totalMoviesByYear = await getTotalMoviesByYear();
@@ -27,31 +22,13 @@ const initialTotalMoviesStats = {
 };
 const firstYear = topMoviesByYear[0].year;
 const lastYear = topMoviesByYear[topMoviesByYear.length - 1].year;
-
-const nextCount = 10;
-
-const nextAnonymousMovies = (await getNextUserMovies())
-  .slice(0, nextCount)
-  .map((movie) => ({
-    ...movie,
-    status: "UNKNOWN",
-    visible: true,
-  })); // default movies without user (anonymous)
 ---
 
-<Layout title="Top Pelis" backButton={false}>
+<Layout title="Top Pelis" backButton={true}>
   <div class="container mx-auto px-4 py-4">
     <div>
-      <h2 class="tracking-wider text-white text-xl font-semibold py-4">
-        Tus próximas <span class="text-red-600">top</span>pelis...
-      </h2>
-      <NextMoviesList
-        client:visible
-        initialNextMovies={nextAnonymousMovies}
-        next={nextCount}
-      />
-      <h2 class="tracking-wider text-white text-xl font-semibold py-4">
-        Lo que llevas visto ({firstYear} - {lastYear})
+      <h2 class="tracking-wider text-red-600 text-xl font-semibold mb-2">
+        Top <span class="text-white">YEARS [{firstYear} - {lastYear}]</span>
       </h2>
       <MoviesProgress
         client:visible

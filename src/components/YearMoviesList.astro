@@ -1,6 +1,6 @@
 ---
-import { getTopMoviesByYear, getTotalMoviesByYear } from "../lib/turso";
-import YearMoviesCard from "./YearMoviesCard.astro";
+import { YearMoviesCarousel } from "./MoviesCarousel";
+import YearMoviesCard from "@components/YearMoviesCard";
 
 interface Props {
   topMoviesByYear: any;
@@ -10,15 +10,27 @@ interface Props {
 const { topMoviesByYear, totalMoviesByYear } = Astro.props;
 ---
 
-<div
-  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8"
->
-  {
-    topMoviesByYear.map((yearMovies) => (
-      <YearMoviesCard
-        yearMovies={yearMovies}
-        totalMovies={totalMoviesByYear[yearMovies.year]}
-      />
-    ))
-  }
+<!-- Desktop -->
+<div class="hidden md:block">
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8"
+  >
+    {
+      topMoviesByYear.map((yearMovies) => (
+        <YearMoviesCard
+          client:visible
+          yearMovies={yearMovies}
+          totalMovies={totalMoviesByYear[yearMovies.year]}
+        />
+      ))
+    }
+  </div>
+</div>
+<!-- Mobile -->
+<div class="block md:hidden">
+  <YearMoviesCarousel
+    client:visible
+    topMoviesByYear={topMoviesByYear}
+    totalMoviesByYear={totalMoviesByYear}
+  />
 </div>

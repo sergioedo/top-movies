@@ -77,7 +77,7 @@ export const $nextUserMovies = computed([$user, $movies], user => task(async () 
 
 			if (response.ok) {
 				const nextUserMovies = await response.json();
-				return nextUserMovies.slice(0, 10);
+				return nextUserMovies;
 			}
 		}
 	} catch {

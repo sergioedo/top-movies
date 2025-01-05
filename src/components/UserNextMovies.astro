@@ -1,8 +1,0 @@
----
-import NextMovies from "./NextMovies";
-import { getNextUserMovies } from "lib/turso";
-
-const nextAnonymousMovies = await getNextUserMovies(); // default movies without user (anonymous)
----
-
-<NextMovies initialNextMovies={nextAnonymousMovies.slice(0, 10)} client:load />

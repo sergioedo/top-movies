@@ -123,7 +123,7 @@ export async function getUserMovies(userEmail) {
 
 export async function getNextUserMovies(userEmail) {
 	const userFilter = `LEFT JOIN user_movies um on m.id=um.movie_id
-						WHERE um.status IS NULL OR um.status NOT IN ('WATCHED', 'DISCARD')AND um.user_email = ?`
+						WHERE um.status IS NULL OR um.status NOT IN ('WATCHED', 'DISCARD') AND um.user_email = ?`
 	const query = `
 		SELECT m.id, m.title, m.release_date, m.rating, m.overview, m.poster_path, CAST(strftime('%Y', m.release_date) as integer) as year
 	  	FROM movies m
