@@ -100,7 +100,7 @@ const MovieImage = ({ movie }) => {
 		<img
 			src={imgUrl}
 			alt={`${movie.title} Poster`}
-			className={`hover:opacity-75 transition ease-in-out duration-300 ${['WATCHED', 'DISCARD'].includes(movie.status) ? 'grayscale' : 'grayscale-0'} rounded-l-lg`}
+			className={`hover:opacity-75 transition ease-in-out duration-300 ${['WATCHED', 'DISCARD'].includes(movie.status) ? 'grayscale' : 'grayscale-0'} rounded-2xl`}
 			id={`movie-poster-${movie.id}`}
 		/>
 	)
@@ -158,7 +158,7 @@ export const MovieCard = ({ initialMovie, isVisible = returnTrue, fullDetail }) 
 	const movieUrL = `/movies/${movie.id}`
 
 	return (
-		<div className={`bg-slate-800 ${movie.visible ? '' : 'hidden'}`}>
+		<div className={`transparent ${movie.visible ? '' : 'hidden'}`}>
 			<div className="flex flex-col md:flex-row h-full">
 				{/* Caratula */}
 				<div className={`relative ${fullDetail ? 'md:w-1/2' : ''}`}>
