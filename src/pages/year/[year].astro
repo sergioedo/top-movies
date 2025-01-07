@@ -1,8 +1,14 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import MovieFilters from "@components/MovieFilters";
-import { getBestMoviesByYear } from "../../lib/turso";
+import { getBestMoviesByYear, getTotalMoviesByYear } from "../../lib/turso";
 import { MoviesList } from "@components/MoviesList";
+
+export const prerender = true;
+export async function getStaticPaths() {
+  const totalMoviesByYear = await getTotalMoviesByYear();
+  return Object.keys(totalMoviesByYear).map((year) => ({ params: { year } }));
+}
 
 const { year } = Astro.params;
 const topMovies = (await getBestMoviesByYear(year)).map((movie) => ({
