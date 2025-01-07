@@ -1,35 +1,41 @@
 ---
-	import Modal from '../../components/Modal.astro';
-	import Layout from '@layouts/Layout.astro';
-	import BackButton from '@components/BackButton.astro';
+import Modal from '../../components/Modal.astro';
+import Layout from '@layouts/Layout.astro';
+import { getAllMovies } from "../../lib/turso";
 
-	const { id } = Astro.params;
-	const url = `https://api.themoviedb.org/3/movie/${id}?append_to_response=credits,videos,images&api_key=${import.meta.env.TMDB_API_KEY}&language=es-ES`;
+export const prerender = true;
+export async function getStaticPaths() {
+  const allMovies = await getAllMovies();
+  return allMovies.map(movie => ({ params: { id: movie.id } }));
+}
 
-	const response = await fetch(url);
-	const data = await response.json();
-	const movie = {
-		...data,
-		poster_path: data.poster_path
-			? 'https://image.tmdb.org/t/p/w500/' + data.poster_path
-			: 'https://via.placeholder.com/500x750',
-		vote_average: (data.vote_average * 10).toFixed(2) + '%',
-		release_date: new Date(data.release_date).toLocaleDateString('en-us', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric'
-		}),
-		genres: data.genres.map(g => g.name).join(', '),
-		crew: data.credits.crew.slice(0, 3),
-		cast: data.credits.cast.slice(0, 5).map(c => ({
-			...c,
-			profile_path: c.profile_path
-				? 'https://image.tmdb.org/t/p/w300/' + c.profile_path
-				: 'https://via.placeholder.com/300x450'
-		})),
-		images: data.images.backdrops.slice(0, 9),
-	}
-	---
+const { id } = Astro.params;
+const url = `https://api.themoviedb.org/3/movie/${id}?append_to_response=credits,videos,images&api_key=${import.meta.env.TMDB_API_KEY}&language=es-ES`;
+
+const response = await fetch(url);
+const data = await response.json();
+const movie = {
+	...data,
+	poster_path: data.poster_path
+		? 'https://image.tmdb.org/t/p/w500/' + data.poster_path
+		: 'https://via.placeholder.com/500x750',
+	vote_average: (data.vote_average * 10).toFixed(2) + '%',
+	release_date: new Date(data.release_date).toLocaleDateString('en-us', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric'
+	}),
+	genres: data.genres.map(g => g.name).join(', '),
+	crew: data.credits.crew.slice(0, 3),
+	cast: data.credits.cast.slice(0, 5).map(c => ({
+		...c,
+		profile_path: c.profile_path
+			? 'https://image.tmdb.org/t/p/w300/' + c.profile_path
+			: 'https://via.placeholder.com/300x450'
+	})),
+	images: data.images.backdrops.slice(0, 9),
+}
+---
 	<Layout title={`Peli - ${movie.title}`} backButton={true}>
 		<div class="movie-info border-b border-gray-800">
 			<div class="container mx-auto px-4 py-8 flex flex-col md:flex-row">
@@ -66,8 +72,7 @@
 					<div x-data="{ isOpen: false }">
 						{movie.videos.results.length && (
 							<div class="mt-12">
-								<button
-								@click="isOpen = true"
+								<button	@click="isOpen = true"
 								class="flex items-center bg-red-600 text-white rounded font-semibold px-5 py-4 hover:bg-red-800 transition ease-in-out duration-150"
 							>
 								<svg class="w-6 fill-current" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none" /><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" /></svg>
@@ -106,7 +111,8 @@
 			))}
 			</div>
 		</div>
-	</div> <!--end movie - cast-->
+	</div> 
+	<!-- end movie - cast -->
 	
 	<div class="movie-images" x-data="{ isOpen: false, image: ''}">
 		<div class="container mx-auto px-4 py-16">
@@ -131,5 +137,6 @@
 				<img :src="image" alt="poster">
 			</Modal>
 		</div>
-	</div> <!--end movie - images-->
-	</Layout>
+	</div> 
+	<!--end movie - images-->
+</Layout>

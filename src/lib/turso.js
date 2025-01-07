@@ -26,6 +26,22 @@ export async function deleteMoviesByYear(year) {
 	`, [year.toString()]);
 }
 
+export async function getAllMovies() {
+	const query = `
+		SELECT 
+			id,
+			title, 
+			strftime('%Y', release_date) as year, 
+			release_date,
+			rating, 
+			poster_path
+		FROM movies
+		ORDER BY year DESC, rating DESC, id
+	`;
+	const { rows } = await client.execute(query, []);
+	return rows;
+}
+
 export async function getTopMoviesByYear(numTop = 1) {
 	const query = `
 	  SELECT id, title, year, release_date, rating, poster_path
