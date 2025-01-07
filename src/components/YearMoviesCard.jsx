@@ -16,7 +16,7 @@ const YearMoviesCard = ({ yearMovies, totalMovies }) => {
 			<div class="grid grid-cols-2 grid-rows-2 gap-0">
 				{
 					movies.map((movie) => (
-						<a href={`/movies/${movie.id}`} id={movie.id}>
+						<a href={`/movies/${movie.id}`} key={movie.id} id={movie.id}>
 							<img
 								src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
 								alt={`${movie.title} Poster`}
