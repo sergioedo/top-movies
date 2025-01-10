@@ -1,48 +1,19 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { signIn, signOut } from "auth-astro/client";
 import { useUser } from '../hooks/useUser';
-
-const handleSignIn = () => {
-	signIn("google");
-}
 
 function Avatar() {
 	const [user, setUser] = useUser();
-
-	const handleSignout = useCallback(() => {
-		setUser();
-		signOut();
-	}, [setUser, signOut])
-
+	const userImage = user && user?.name !== 'anonymous' && user.image ? user.image : "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+	const userName = user && user?.name !== 'anonymous' ? user?.name : '';
+	const userEmail = user && user?.name !== 'anonymous' ? user?.email : '';
 	return (
-		<div className="flex items-center gap-2">
-			{(user && user?.name !== 'anonymous') ? (
-				<div className="flex items-center gap-2 cursor-pointer">
-					<img
-						src={user.image || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"}
-						alt={user.name || "Usuario"}
-						className="w-10 h-10 rounded-full border-2 border-gray-300"
-						onClick={handleSignout}
-						title="Cerrar sesión"
-						referrerPolicy="no-referrer"
-					/>
-					<span className="hidden md:block text-sm text-white">{user.name}</span>
-				</div>
-			) : (
-				// <button className="bg-blue-500 text-white border-none px-4 py-2 rounded-full cursor-pointer text-sm transition-colors hover:bg-blue-600" onClick={handleSignIn}>
-				// 	Iniciar Sesión
-				// </button>
-				<div className="flex items-center gap-2 cursor-pointer">
-					<img
-						src={"https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"}
-						alt={"Usuario"}
-						className="w-10 h-10 rounded-full border-2 border-gray-300"
-						onClick={handleSignIn}
-						title="Iniciar sesión"
-						referrerPolicy="no-referrer"
-					/>
-				</div>
-			)}
+		<div className={`flex items-center ${userName ? 'gap-2' : 'gap-0'}`}>
+			<img src={userImage} className="size-8 object-cover rounded-xl" alt="avatar" aria-hidden="true" />
+			<div className="hidden md:flex flex-col">
+				<span className="text-sm font-bold text-black dark:text-white">{userName}</span>
+				<span className="text-xs" aria-hidden="true">{userEmail}</span>
+				<span className="sr-only">profile settings</span>
+			</div>
+
 		</div>
 	);
 }
