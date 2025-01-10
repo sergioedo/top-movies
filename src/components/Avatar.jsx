@@ -8,30 +8,6 @@ const handleSignIn = () => {
 
 function Avatar() {
 	const [user, setUser] = useUser();
-	const [loading, setLoading] = useState(true);
-
-	// Verificar sesión al cargar
-	useEffect(() => {
-		async function checkSession() {
-			try {
-				const response = await fetch("/api/auth/session", {
-					method: "GET",
-					credentials: "include",
-				});
-				if (response.ok) {
-					const session = await response.json();
-					setUser(session?.user);
-				} else {
-					setUser();
-				}
-			} catch (error) {
-				console.error("Error al comprobar la sesión:", error);
-			} finally {
-				setLoading(false);
-			}
-		}
-		checkSession();
-	}, []);
 
 	const handleSignout = useCallback(() => {
 		setUser();
