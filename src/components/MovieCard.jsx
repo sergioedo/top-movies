@@ -100,7 +100,7 @@ const MovieImage = ({ movie }) => {
 		<img
 			src={imgUrl}
 			alt={`${movie.title} Poster`}
-			className={`hover:opacity-75 transition ease-in-out duration-300 ${['WATCHED', 'DISCARD'].includes(movie.status) ? 'grayscale' : 'grayscale-0'} rounded-2xl`}
+			className={`hover:opacity-75 transition ease-in-out duration-300 ${['WATCHED', 'DISCARD'].includes(movie.status) ? 'grayscale' : 'grayscale-0'} rounded-2xl border-[1px] border-slate-800`}
 			id={`movie-poster-${movie.id}`}
 		/>
 	)
@@ -162,10 +162,10 @@ export const MovieCard = ({ initialMovie, isVisible = returnTrue, fullDetail }) 
 			<div className="flex flex-col md:flex-row h-full">
 				{/* Caratula */}
 				<div className={`relative ${fullDetail ? 'md:w-1/2' : ''}`}>
-					<a href={movieUrL} className="block relative z-10">
+					<a href={movieUrL} className="block relative">
 						<MovieImage movie={movie} />
 					</a>
-					<div className="absolute top-0 z-10 flex items-center justify-center text-white text-md p-1 m-4 bg-slate-800 rounded-lg opacity-90">
+					<div className="absolute top-0 flex items-center justify-center text-white text-md p-1 m-4 bg-slate-800 rounded-lg opacity-90">
 						<svg className="fill-current text-yellow-500 w-4" viewBox="0 0 24 24"
 						><g dataname="Layer 2"
 						><path
@@ -176,19 +176,19 @@ export const MovieCard = ({ initialMovie, isVisible = returnTrue, fullDetail }) 
 						{/* <span>{movie.release_date}</span> */}
 					</div>
 
-					<div className="absolute top-0 right-0 z-10 flex items-center justify-center text-white text-md p-1 m-4 bg-slate-800 rounded-lg opacity-90">
+					<div className="absolute top-0 right-0 flex items-center justify-center text-white text-md p-1 m-4 bg-slate-800 rounded-lg opacity-90">
 						<span>{movie.release_date?.split('-')[0]}</span>
 					</div>
 
 					{["WATCHED", "DISCARD"].includes(movie.status) &&
-						<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-10 flex items-center justify-center text-white text-md">
+						<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex items-center justify-center text-white text-md">
 							<Stamp text={movie.status === 'WATCHED' ? 'YA LA HE VISTO!' : 'NO LA QUIERO VER'} color={movie.status === 'WATCHED' ? 'green' : 'red'} />
 						</div>
 					}
 
 					{/* <!-- Botones flotantes en la parte inferior --> */}
 					<div
-						className="absolute inset-x-0 bottom-0 flex justify-center gap-8 md:gap-4 mb-4 px-4 py-4 pointer-events-none z-20"
+						className="absolute inset-x-0 bottom-0 flex justify-center gap-8 md:gap-4 mb-4 px-4 py-4 pointer-events-none"
 					>
 						<StatusButton
 							status={movie.status}
