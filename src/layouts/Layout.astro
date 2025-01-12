@@ -54,10 +54,13 @@ const { title, backButton } = Astro.props as Props;
           aria-label="sidebar navigation"
         >
           <!-- logo  -->
-          <a href="/" class="flex items-center font-bold text-xl ml-2">
-            <div class="mb-2 mr-1"><Logo /></div>
+          <a
+            href="/"
+            class="flex items-end justify-left font-bold text-2xl ml-2"
+          >
+            <div class="w-12 mr-1"><Logo /></div>
             <span class="mr-2 text-red-600">op</span>
-            <span> pelis</span>
+            <span class="">pelis</span>
           </a>
 
           <!-- search  -->
@@ -95,8 +98,8 @@ const { title, backButton } = Astro.props as Props;
               class="flex items-center rounded-xl gap-2 px-2 py-1.5 text-sm font-medium text-slate-700 underline-offset-2 hover:bg-red-700/5 hover:text-black focus-visible:underline focus:outline-none dark:text-slate-300 dark:hover:bg-red-600/5 dark:hover:text-white"
             >
               <svg
-                width="20px"
-                height="20px"
+                width="24px"
+                height="24px"
                 viewBox="0 0 48 48"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -141,8 +144,8 @@ const { title, backButton } = Astro.props as Props;
                 </g></svg
               >
               <!-- <span>Dashboard</span> -->
-              <span class="tracking-wider text-red-600 font-semibold">
-                Top<span class="text-white">50</span>
+              <span class="tracking-wider text-red-600 font-semibold text-lg">
+                Top <span class="text-white">50</span>
               </span>
             </a>
 
@@ -152,8 +155,8 @@ const { title, backButton } = Astro.props as Props;
             >
               <svg
                 viewBox="0 0 24 24"
-                width="20px"
-                height="20px"
+                width="24px"
+                height="24px"
                 id="next-square"
                 data-name="Line Color"
                 xmlns="http://www.w3.org/2000/svg"
@@ -178,8 +181,8 @@ const { title, backButton } = Astro.props as Props;
                   ></rect></g
                 ></svg
               >
-              <span class="tracking-wider text-red-600 font-semibold">
-                Top<span class="text-white">NEXT</span>
+              <span class="tracking-wider text-lg text-red-600 font-semibold">
+                Top <span class="text-white">Next</span>
               </span>
             </a>
 
@@ -193,8 +196,8 @@ const { title, backButton } = Astro.props as Props;
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 viewBox="0 0 512 512"
-                width="20px"
-                height="20px"
+                width="24px"
+                height="24px"
                 xml:space="preserve"
                 fill="currentColor"
                 ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
@@ -288,8 +291,8 @@ const { title, backButton } = Astro.props as Props;
                   </g>
                 </g></svg
               >
-              <span class="tracking-wider text-red-600 font-semibold">
-                Top<span class="text-white">YEAR</span>
+              <span class="tracking-wider text-lg text-red-600 font-semibold">
+                Top <span class="text-white">Year</span>
               </span>
             </a>
 
@@ -303,8 +306,8 @@ const { title, backButton } = Astro.props as Props;
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 viewBox="0 0 32 32"
-                width="20px"
-                height="20px"
+                width="24px"
+                height="24px"
                 xml:space="preserve"
                 fill="currentColor"
                 ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
@@ -326,7 +329,7 @@ const { title, backButton } = Astro.props as Props;
                     height="10"></rect>
                 </g></svg
               >
-              <span class="tracking-wider text-white font-semibold">
+              <span class="tracking-wider text-lg text-white font-semibold">
                 Géneros
               </span>
             </a>
@@ -351,17 +354,12 @@ const { title, backButton } = Astro.props as Props;
               class="md:hidden inline-block text-slate-700 dark:text-slate-300"
               x-on:click="sidebarIsOpen = true"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                class="size-5"
-                aria-hidden="true"
-              >
-                <path
-                  d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5-1v12h9a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zM4 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h2z"
-                ></path>
-              </svg>
+              <div class="flex flex-col items-center">
+                <div class="w-10">
+                  <Logo />
+                </div>
+                <span class="text-xs text-white font-mono">pelis</span>
+              </div>
               <span class="sr-only">sidebar toggle</span>
             </button>
 
