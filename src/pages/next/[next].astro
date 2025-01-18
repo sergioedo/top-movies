@@ -10,11 +10,20 @@ const nextAnonymousMovies = (await getNextUserMovies())
   .map((movie) => ({ ...movie, status: "UNKNOWN", visible: true })); // default movies without user (anonymous)
 ---
 
-<Layout title="Top Next" backButton={true}>
-  <div class="container mx-auto px-4 py-4">
-    <h2 class="tracking-wider text-red-600 text-xl font-semibold pb-4">
-      TOP <span class="text-white">NEXT {next}</span>
-    </h2>
+<Layout title="Top Next" backButton={true} section="Next">
+  <div class="container mx-auto">
+    <div class="flex justify-between">
+      <h2
+        class="uppercase tracking-wider text-red-600 text-xl font-semibold pb-4"
+      >
+        <span class="text-white">
+          <!-- TODO: FUTURE FILTERS -->
+        </span>
+      </h2>
+      <h6 class="tracking-wider text-white font-semibold pb-4">
+        Next <span class="text-red-600">{next}</span>
+      </h6>
+    </div>
     <NextMoviesList
       client:visible
       initialNextMovies={nextAnonymousMovies}

@@ -18,16 +18,24 @@ const topMovies = (await getBestMoviesByYear(year)).map((movie) => ({
 }));
 ---
 
-<Layout title={`Top Year - ${year}`} backButton={true}>
-  <div class="container mx-auto px-4 pt-4 mb-16">
+<Layout
+  title={`Top Year - ${year}`}
+  backButton={true}
+  section="Year"
+  sectionUrl="/year"
+  subSection={year}
+>
+  <div class="container mx-auto">
     <div>
       <div class="flex justify-between">
         <h2
-          class="uppercase tracking-wider text-red-600 text-xl font-semibold py-4"
+          class="uppercase tracking-wider text-red-600 text-xl font-semibold pb-4"
         >
-          TOP <span class="text-white">{year}</span>
+          <!-- TOP <span class="text-white">{year}</span> -->
         </h2>
-        <MovieFilters client:visible />
+        <div class="pb-4">
+          <MovieFilters client:visible />
+        </div>
       </div>
       <MoviesList client:visible initialMovies={topMovies} />
     </div>
