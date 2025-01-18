@@ -6,9 +6,7 @@ export interface Props {
 const { title, disabled } = Astro.props as Props;
 ---
 
-<span
-  class={`tracking-wider text-red-600 font-semibold ${disabled ? "md:text-lg" : "text-lg"}`}
->
+<span class={`tracking-wider text-red-600 font-semibold`}>
   Top <span class={disabled ? "text-slate-300 hover:text-white" : "text-white"}
     >{title}</span
   >

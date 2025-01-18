@@ -102,10 +102,10 @@ const { title, backButton, section, sectionUrl, subSection } =
           </div>
 
           <!-- sidebar links  -->
-          <div class="flex flex-col gap-2 overflow-y-auto pb-6">
+          <div class="flex flex-col gap-2 overflow-y-auto pb-6 text-lg">
             <a
               href="/top/50"
-              class="flex items-center rounded-xl gap-2 px-2 py-1.5 text-sm font-medium text-slate-700 underline-offset-2 hover:bg-red-700/5 hover:text-black focus-visible:underline focus:outline-none dark:text-slate-300 dark:hover:bg-red-600/10 dark:hover:text-white"
+              class="flex items-center rounded-xl gap-2 px-2 py-1.5 font-medium text-slate-700 underline-offset-2 hover:bg-red-700/5 hover:text-black focus-visible:underline focus:outline-none dark:text-slate-300 dark:hover:bg-red-600/10 dark:hover:text-white"
             >
               <TopList />
               <TopTitle title="50" />
@@ -113,7 +113,7 @@ const { title, backButton, section, sectionUrl, subSection } =
 
             <a
               href="/next/20"
-              class="flex items-center rounded-xl gap-2 px-2 py-1.5 text-sm font-medium text-slate-700 underline-offset-2 hover:bg-red-700/5 hover:text-black focus-visible:underline focus:outline-none dark:text-slate-300 dark:hover:bg-red-600/10 dark:hover:text-white"
+              class="flex items-center rounded-xl gap-2 px-2 py-1.5 font-medium text-slate-700 underline-offset-2 hover:bg-red-700/5 hover:text-black focus-visible:underline focus:outline-none dark:text-slate-300 dark:hover:bg-red-600/10 dark:hover:text-white"
             >
               <TopPlay />
               <TopTitle title="Next" />
@@ -121,7 +121,7 @@ const { title, backButton, section, sectionUrl, subSection } =
 
             <a
               href="/year"
-              class="flex items-center rounded-xl gap-2 px-2 py-1.5 text-sm font-medium text-slate-700 underline-offset-2 hover:bg-red-700/5 hover:text-black focus-visible:underline focus:outline-none dark:text-slate-300 dark:hover:bg-red-600/10 dark:hover:text-white"
+              class="flex items-center rounded-xl gap-2 px-2 py-1.5 font-medium text-slate-700 underline-offset-2 hover:bg-red-700/5 hover:text-black focus-visible:underline focus:outline-none dark:text-slate-300 dark:hover:bg-red-600/10 dark:hover:text-white"
             >
               <TopCalendar />
               <TopTitle title="Year" />
@@ -168,7 +168,7 @@ const { title, backButton, section, sectionUrl, subSection } =
 
             <!-- breadcrumbs  -->
             <nav
-              class=`text-sm font-medium text-slate-700 ${subSection ? 'dark:text-slate-300': 'dark:text-white'}`
+              class=`text-xl font-medium text-slate-700 ${subSection ? 'dark:text-slate-300': 'dark:text-white'}`
               aria-label="breadcrumb"
             >
               <ol
@@ -177,7 +177,7 @@ const { title, backButton, section, sectionUrl, subSection } =
                 <li class="flex items-center gap-1">
                   <a
                     href={sectionUrl ? sectionUrl : "#"}
-                    class="hover:text-black dark:hover:text-white"
+                    class={`hover:text-black dark:hover:text-white ${subSection ? "text-sm" : ""}`}
                     >{
                       section && (
                         <TopTitle
@@ -199,7 +199,7 @@ const { title, backButton, section, sectionUrl, subSection } =
                 {
                   subSection && (
                     <li
-                      class="flex items-center gap-1 font-semibold text-black dark:text-white tracking-wider text-lg"
+                      class="flex text-xl items-center gap-1 font-semibold text-black dark:text-white tracking-wider"
                       aria-current="page"
                     >
                       {subSection}
