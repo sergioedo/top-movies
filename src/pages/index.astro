@@ -2,49 +2,11 @@
 export const prerender = true;
 
 import Layout from "@layouts/Layout.astro";
-import YearMoviesList from "@components/YearMoviesList.astro";
-import MoviesProgress from "@components/MoviesProgress";
-import {
-  getNextUserMovies,
-  getTopMoviesByYear,
-  getTotalMoviesByYear,
-} from "../lib/turso";
-import { NextMoviesList } from "@components/MoviesList";
 import TopList from "@components/icons/TopList.astro";
 import TopTitle from "@components/TopTitle.astro";
 import TopPlay from "@components/icons/TopPlay.astro";
 import TopCalendar from "@components/icons/TopCalendar.astro";
 import { MovieCard, StatusButton } from "@components/MovieCard";
-import { WatchedButton } from "@components/icons/StatusButtons";
-
-const topMoviesByYear = await getTopMoviesByYear(4);
-const totalMoviesByYear = await getTotalMoviesByYear();
-const totalMovies = Object.keys(totalMoviesByYear).reduce(
-  (totalMovies, year) => {
-    return totalMovies + totalMoviesByYear[year];
-  },
-  0
-);
-const initialTotalMoviesStats = {
-  seenMoviesCount: 0,
-  seenPercentage: 0,
-  discardMoviesCount: 0,
-  discardPercentage: 0,
-  unseenMoviesCount: totalMovies,
-  unseenPercentage: 100,
-};
-const firstYear = topMoviesByYear[0].year;
-const lastYear = topMoviesByYear[topMoviesByYear.length - 1].year;
-
-const nextCount = 10;
-
-const nextAnonymousMovies = (await getNextUserMovies())
-  .slice(0, nextCount)
-  .map((movie) => ({
-    ...movie,
-    status: "UNKNOWN",
-    visible: true,
-  })); // default movies without user (anonymous)
 ---
 
 <Layout title="Top Pelis" backButton={false} section="Pelis">
