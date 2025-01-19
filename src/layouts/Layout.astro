@@ -125,7 +125,7 @@ const { title, backButton, section, sectionUrl, subSection } =
             </a>
 
             <a
-              href="/year"
+              href="/years"
               class="flex items-center rounded-xl gap-2 px-2 py-1.5 font-medium text-slate-700 underline-offset-2 hover:bg-red-700/5 hover:text-black focus-visible:underline focus:outline-none dark:text-slate-300 dark:hover:bg-red-600/10 dark:hover:text-white"
             >
               <TopCalendar />
@@ -182,7 +182,7 @@ const { title, backButton, section, sectionUrl, subSection } =
                 <li class="flex items-center gap-1">
                   <a
                     href={sectionUrl ? sectionUrl : "#"}
-                    class={`hover:text-black dark:hover:text-white ${subSection ? "text-sm" : ""}`}
+                    class={`hover:text-black dark:hover:text-white ${subSection ? "text-sm md:text-xl" : ""}`}
                     >{
                       section && (
                         <TopTitle

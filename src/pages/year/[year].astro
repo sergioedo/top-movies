@@ -22,7 +22,7 @@ const topMovies = (await getBestMoviesByYear(year)).map((movie) => ({
   title={`Top Year - ${year}`}
   backButton={true}
   section="Year"
-  sectionUrl="/year"
+  sectionUrl={`/years/${year.slice(0, 3)}`}
   subSection={year}
 >
   <div class="container mx-auto">

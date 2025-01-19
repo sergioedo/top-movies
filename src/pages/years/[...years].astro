@@ -1,0 +1,84 @@
+---
+import Layout from "@layouts/Layout.astro";
+import YearMoviesList from "@components/YearMoviesList.astro";
+import { getTopMoviesByYear, getTotalMoviesByYear } from "../../lib/turso";
+import { undefined } from "astro:schema";
+import RightChevron from "@components/icons/RightChevron.astro";
+import LeftChevron from "@components/icons/LeftChevron.astro";
+
+export async function getStaticPaths() {
+  const totalMoviesByYear = await getTotalMoviesByYear();
+  return [
+    ...Object.keys(
+      Object.keys(totalMoviesByYear).reduce((prevYears, currYear) => {
+        return {
+          ...prevYears,
+          [currYear.slice(0, 3)]: 1, // set Years = year prefix as key YYYX (2013 -> 201)
+        };
+      }, {})
+    ).map((years) => ({ params: { years } })),
+    { params: { years: undefined } },
+  ];
+}
+
+const { years } = Astro.params;
+
+const allTopMoviesByYear = await getTopMoviesByYear(4);
+const yearFilter = years ? years : allTopMoviesByYear[0].year.slice(0, 3);
+const topMoviesByYear = allTopMoviesByYear.filter((tmy) =>
+  // @ts-ignore
+  tmy.year.startsWith(yearFilter)
+);
+const totalMoviesByYear = await getTotalMoviesByYear();
+
+const maxYearFilter = allTopMoviesByYear[0].year.slice(0, 3);
+const minYearFilter = allTopMoviesByYear[
+  allTopMoviesByYear.length - 1
+].year.slice(0, 3);
+const firstYear = topMoviesByYear[0].year;
+const lastYear = topMoviesByYear[topMoviesByYear.length - 1].year;
+---
+
+<Layout title="Top Pelis" backButton={true} section="Year">
+  <div class="container mx-auto">
+    <div>
+      <div class="flex justify-between">
+        <h2
+          class="uppercase tracking-wider text-red-600 text-xl font-semibold pb-4"
+        >
+          <span class="text-white">
+            <!-- TODO: FUTURE FILTERS -->
+          </span>
+        </h2>
+        <div class="flex items-center mb-4 gap-2">
+          {
+            yearFilter < maxYearFilter && (
+              <a href={`/years/${Number(yearFilter) + 1}`}>
+                <LeftChevron />
+              </a>
+            )
+          }
+          <h6 class="tracking-wider text-white font-semibold">
+            Years <span class="text-red-600">[{firstYear} - {lastYear}]</span>
+          </h6>
+          {
+            yearFilter > minYearFilter && (
+              <a href={`/years/${Number(yearFilter) - 1}`}>
+                <RightChevron />
+              </a>
+            )
+          }
+        </div>
+      </div>
+      <!-- <MoviesProgress
+        client:visible
+        initialStats={initialTotalMoviesStats}
+        totalMovies={totalMovies}
+      /> -->
+      <YearMoviesList
+        topMoviesByYear={topMoviesByYear}
+        totalMoviesByYear={totalMoviesByYear}
+      />
+    </div>
+  </div>
+</Layout>
