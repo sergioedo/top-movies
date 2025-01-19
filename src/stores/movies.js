@@ -47,10 +47,11 @@ export const updateMovieStatus = async (movieId, newStatus, year) => {
 }
 
 $user.listen(async (currentUser, previousUser) => {
+	console.log({ currentUser, previousUser })
 	if (!isAnonymousUser(previousUser)) {
 		$movies.setKey(previousUser?.email, []) //clear movies from previous user
 	}
-	if (!isAnonymousUser(currentUser)) {
+	if (currentUser && !isAnonymousUser(currentUser)) {
 		const response = await fetch("/api/user/movies", {
 			method: "GET",
 			credentials: "include",
@@ -66,7 +67,7 @@ $user.listen(async (currentUser, previousUser) => {
 // Next movies
 export const $nextUserMovies = computed([$user, $movies], user => task(async () => {
 	try {
-		if (!isAnonymousUser(user)) {
+		if (user && !isAnonymousUser(user)) {
 			const response = await fetch("/api/user/movies/next", {
 				method: "GET",
 				headers: {
