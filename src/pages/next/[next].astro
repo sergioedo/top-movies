@@ -2,8 +2,10 @@
 import Layout from "@layouts/Layout.astro";
 import { NextMoviesList } from "@components/MoviesList";
 import { getNextUserMovies } from "lib/turso";
+import LoginMenuOption from "@components/LoginMenuOption";
 
 const { next } = Astro.params;
+const userEmail = Astro.locals?.user?.email;
 
 const nextAnonymousMovies = (await getNextUserMovies())
   .slice(0, Number(next))
@@ -11,6 +13,7 @@ const nextAnonymousMovies = (await getNextUserMovies())
 ---
 
 <Layout title="Top Next" backButton={true} section="Next">
+{userEmail ?
   <div class="container mx-auto">
     <div class="flex justify-between">
       <h2
@@ -30,4 +33,10 @@ const nextAnonymousMovies = (await getNextUserMovies())
       next={Number(next)}
     />
   </div>
+: 
+<div class="flex flex-col gap-4">
+	<span>Esta lista es <span class="underline">personalizada</span> requiere que inicies sesión para verla.</span>
+	<LoginMenuOption client:load />
+</div>
+}	
 </Layout>
