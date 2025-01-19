@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS movies (
 	release_date TEXT,
 	rating REAL,
 	overview TEXT,
-	poster_path TEXT
+	poster_path TEXT,
+	genres TEXT
 );
 
 DROP TABLE user_movies;
