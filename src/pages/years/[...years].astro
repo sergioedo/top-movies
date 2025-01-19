@@ -2,10 +2,10 @@
 import Layout from "@layouts/Layout.astro";
 import YearMoviesList from "@components/YearMoviesList.astro";
 import { getTopMoviesByYear, getTotalMoviesByYear } from "../../lib/turso";
-import { undefined } from "astro:schema";
 import RightChevron from "@components/icons/RightChevron.astro";
 import LeftChevron from "@components/icons/LeftChevron.astro";
 
+export const prerender = true;
 export async function getStaticPaths() {
   const totalMoviesByYear = await getTotalMoviesByYear();
   return [
