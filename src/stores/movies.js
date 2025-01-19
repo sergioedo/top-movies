@@ -31,7 +31,7 @@ export const updateMovieStatus = async (movieId, newStatus, year) => {
 	$movies.setKey($user.get()?.email, movies)
 
 	// Save user movie (server)
-	if (!isAnonymousUser($user.get())) {
+	if ($user.get() && !isAnonymousUser($user.get())) {
 		const response = await fetch("/api/user/movies/" + movieId, {
 			method: "POST",
 			headers: {
