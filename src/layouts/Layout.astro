@@ -32,6 +32,11 @@ const { title, backButton, section, sectionUrl, subSection } =
     <meta name="generator" content={Astro.generator} />
     <meta name="view-transition" content="same-origin" />
     <title>{title}</title>
+    <!-- Alpine Plugins -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"
+    ></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
       import "../scripts/spa-navigation.js";
