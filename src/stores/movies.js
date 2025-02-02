@@ -14,6 +14,18 @@ export const $movies = persistentMap('nano-movies:', {
 
 export const getUserMovies = () => $movies.get()[$user.get()?.email] || []
 
+const fetchUserMovies = async (userEmail) => {
+	const response = await fetch("/api/user/movies", {
+		method: "GET",
+		credentials: "include",
+	});
+
+	if (response.ok) {
+		const userMovies = await response.json();
+		$movies.setKey(userEmail, userMovies)
+	}
+}
+
 export const updateMovieStatus = async (movieId, newStatus, year) => {
 	let movies = getUserMovies()
 	// Find movie to add or update
@@ -43,24 +55,18 @@ export const updateMovieStatus = async (movieId, newStatus, year) => {
 				status: newStatus,
 			}),
 		});
+		// force refresh movies after update, for dynamic user content (ex. next movies)
+		await fetchUserMovies($user.get().email)
 	}
 }
 
 $user.listen(async (currentUser, previousUser) => {
-	console.log({ currentUser, previousUser })
+	// console.log({ currentUser, previousUser })
 	if (!isAnonymousUser(previousUser)) {
 		$movies.setKey(previousUser?.email, []) //clear movies from previous user
 	}
 	if (currentUser && !isAnonymousUser(currentUser)) {
-		const response = await fetch("/api/user/movies", {
-			method: "GET",
-			credentials: "include",
-		});
-
-		if (response.ok) {
-			const userMovies = await response.json();
-			$movies.setKey(currentUser?.email, userMovies)
-		}
+		await fetchUserMovies(currentUser?.email)
 	}
 })
 
