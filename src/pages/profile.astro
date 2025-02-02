@@ -3,7 +3,7 @@ export const prerender = true;
 
 import Layout from "@layouts/Layout.astro";
 import MoviesProgress from "@components/MoviesProgress";
-import { getTopMoviesByYear, getTotalMoviesByYear } from "../lib/turso";
+import { getTopMoviesByYear, getTotalMoviesByYear } from "@libs/turso";
 
 const topMoviesByYear = await getTopMoviesByYear(4);
 const totalMoviesByYear = await getTotalMoviesByYear();

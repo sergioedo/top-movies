@@ -1,4 +1,4 @@
-import { getUserMovies } from '../../../lib/turso.js'
+import { getUserMovies } from '@libs/turso'
 
 export async function GET({ locals }) {
 	const userEmail = locals?.user?.email;

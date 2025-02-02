@@ -1,4 +1,4 @@
-import { saveUserMovie } from '../../../../lib/turso.js';
+import { saveUserMovie } from '@libs/turso';
 
 export async function POST({ params, request, locals }) {
 	const movieId = params.id;

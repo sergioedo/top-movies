@@ -1,7 +1,7 @@
 ---
-import Modal from '../../components/Modal.astro';
+import Modal from '@components/Modal.astro';
 import Layout from '@layouts/Layout.astro';
-import { getAllMovies } from "../../lib/turso";
+import { getAllMovies } from "@libs/turso";
 
 export const prerender = true;
 export async function getStaticPaths() {

@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { saveMovie, deleteMoviesByYear } from '../../lib/turso.js';
+import { saveMovie, deleteMoviesByYear } from '@libs/turso';
 
 const TMDB_API_KEY = import.meta.env.TMDB_API_KEY;
 const ADMIN_USER_EMAIL = import.meta.env.ADMIN_USER_EMAIL
