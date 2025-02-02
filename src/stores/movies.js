@@ -1,6 +1,7 @@
 import { persistentAtom, persistentMap } from '@nanostores/persistent'
 import { $user, anonymousUser, isAnonymousUser } from './user'
 import { computed, task } from 'nanostores'
+import { GENRES } from '@libs/genres'
 
 const storageEncoding = {
 	encode: JSON.stringify,
@@ -61,7 +62,6 @@ export const updateMovieStatus = async (movieId, newStatus, year) => {
 }
 
 $user.listen(async (currentUser, previousUser) => {
-	// console.log({ currentUser, previousUser })
 	if (!isAnonymousUser(previousUser)) {
 		$movies.setKey(previousUser?.email, []) //clear movies from previous user
 	}
@@ -74,7 +74,10 @@ $user.listen(async (currentUser, previousUser) => {
 export const $nextUserMovies = computed([$user, $movies], user => task(async () => {
 	try {
 		if (user && !isAnonymousUser(user)) {
-			const response = await fetch("/api/user/movies/next", {
+			const firstPathSegment = window.location.pathname.split('/')[1];
+			const genre = GENRES.includes(firstPathSegment) ? firstPathSegment : undefined;
+
+			const response = await fetch(`/api/user/movies/next${genre ? '?genre=' + genre : ''}`, {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",

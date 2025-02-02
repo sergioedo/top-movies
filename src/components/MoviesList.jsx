@@ -53,9 +53,9 @@ export const NextMoviesList = ({ initialNextMovies = [], next = 5 }) => {
 		setMovies(nextUserMovies
 			.slice(0, next)
 			.map((movie) => ({
-				...movie,
 				status: "UNKNOWN",
 				visible: true,
+				...movie,
 			})))
 	}, [userMovies, nextUserMovies])
 

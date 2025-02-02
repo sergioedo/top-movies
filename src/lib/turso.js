@@ -111,11 +111,11 @@ export async function getBestMoviesByYear(year, minRating = 7) {
 }
 
 export async function saveMovie(movie) {
-	const { id, title, release_date, vote_average, overview, poster_path } = movie;
+	const { id, title, release_date, vote_average, overview, poster_path, genre_ids } = movie;
 	await client.execute(`
-    INSERT INTO movies (id, title, release_date, rating, overview, poster_path)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `, [id, title, release_date, vote_average, overview, poster_path]);
+    INSERT INTO movies (id, title, release_date, rating, overview, poster_path, genre_ids)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `, [id, title, release_date, vote_average, overview, poster_path, JSON.stringify(genre_ids)]);
 }
 
 export async function saveUserMovie(movieId, userEmail, status) {
@@ -137,13 +137,19 @@ export async function getUserMovies(userEmail) {
 	return rows;
 }
 
-export async function getNextUserMovies(userEmail) {
+export async function getNextUserMovies(userEmail, genre_ids) {
 	const userFilter = `LEFT JOIN user_movies um on m.id=um.movie_id
-						WHERE um.status IS NULL OR um.status NOT IN ('WATCHED', 'DISCARD') AND um.user_email = ?`
+						WHERE (um.status IS NULL OR um.status NOT IN ('WATCHED', 'DISCARD') AND um.user_email = ?)`
+	const genreFilter = `EXISTS (
+    					SELECT 1 FROM json_each(m.genre_ids) 
+    					WHERE json_each.value IN (${genre_ids?.join(",")})
+						)`
 	const query = `
 		SELECT m.id, m.title, m.release_date, m.rating, m.overview, m.poster_path, CAST(strftime('%Y', m.release_date) as integer) as year
 	  	FROM movies m
   		${userEmail ? userFilter : ''}
+		${userEmail && genre_ids ? ' AND ' : genre_ids ? 'WHERE ' : ''}
+		${genre_ids ? genreFilter : ''}
 		ORDER BY m.rating desc
 		LIMIT 50`;
 	const { rows } = await client.execute(query, userEmail ? [userEmail] : []);

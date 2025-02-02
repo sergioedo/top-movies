@@ -36,7 +36,6 @@ async function checkSession() {
 
 onMount($user, () => {
 	// Mount mode
-	console.log('onMount', $user)
 	checkSession();
 	return () => {
 		// Disabled mode

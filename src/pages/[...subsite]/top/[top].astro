@@ -4,10 +4,13 @@ import MovieFilters from "@components/MovieFilters";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { MoviesList } from "@components/MoviesList";
 import { getNextUserMovies } from "lib/turso";
+import { GENRE_IDS, GENRE_TITLE } from "@libs/genres";
 
 const { top } = Astro.params;
+const genre = Astro.params.subsite?.split("/")[0];
+const genreIds = genre && GENRE_IDS[genre];
 
-const topMovies = (await getNextUserMovies())
+const topMovies = (await getNextUserMovies(undefined, genreIds))
   .slice(0, Number(top))
   .map((movie) => ({ ...movie, status: "UNKNOWN", visible: true })); // default movies without user (anonymous)
 ---

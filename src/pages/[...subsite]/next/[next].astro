@@ -3,13 +3,16 @@ import Layout from "@layouts/Layout.astro";
 import { NextMoviesList } from "@components/MoviesList";
 import { getNextUserMovies } from "lib/turso";
 import LoginMenuOption from "@components/LoginMenuOption";
+import { GENRE_IDS } from "@libs/genres";
 
 const { next } = Astro.params;
+const genre = Astro.params.subsite?.split("/")[0];
+const genreIds = genre && GENRE_IDS[genre];
 const userEmail = Astro.locals?.user?.email;
 
-const nextAnonymousMovies = (await getNextUserMovies())
+const nextAnonymousMovies = (await getNextUserMovies(userEmail, genreIds))
   .slice(0, Number(next))
-  .map((movie) => ({ ...movie, status: "UNKNOWN", visible: true })); // default movies without user (anonymous)
+  .map((movie) => ({ status: "UNKNOWN", visible: true, ...movie })); // default movies without user (anonymous)
 ---
 
 <Layout title="Top Next" backButton={true} section="Next">

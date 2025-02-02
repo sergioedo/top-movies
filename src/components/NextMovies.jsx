@@ -13,7 +13,6 @@ const NextMovies = ({ initialNextMovies = [] }) => {
 	useEffect(() => {
 		setIsDesktop(matches)
 	}, [matches])
-	console.log({ isDesktop })
 	return (
 		<div className="mt-4 mb-8 bg-slate-800 rounded-lg">
 			<Carousel
