@@ -3,15 +3,25 @@ import Layout from "@layouts/Layout.astro";
 import MovieFilters from "@components/MovieFilters";
 import { getBestMoviesByYear, getTotalMoviesByYear } from "@libs/turso";
 import { MoviesList } from "@components/MoviesList";
+import { GENRE_IDS, GENRE_TITLE, GENRES } from "@libs/genres";
 
 export const prerender = true;
 export async function getStaticPaths() {
   const totalMoviesByYear = await getTotalMoviesByYear();
-  return Object.keys(totalMoviesByYear).map((year) => ({ params: { year } }));
+  return Object.keys(totalMoviesByYear).flatMap((year) => {
+    return [
+      ...GENRES.map((genre) => ({ params: { year, subsite: genre } })),
+      { params: { year, subsite: undefined } },
+    ];
+  });
 }
 
-const { year } = Astro.params;
-const topMovies = (await getBestMoviesByYear(year)).map((movie) => ({
+const { year, subsite } = Astro.params;
+const genre = subsite?.split("/")[0];
+const genreIds = genre && GENRE_IDS[genre];
+const title = `Top Year - ${year} (${GENRE_TITLE[genre || ""]?.es})`;
+
+const topMovies = (await getBestMoviesByYear(year, genreIds)).map((movie) => ({
   ...movie,
   status: "UNKNOWN",
   visible: true,
@@ -19,11 +29,12 @@ const topMovies = (await getBestMoviesByYear(year)).map((movie) => ({
 ---
 
 <Layout
-  title={`Top Year - ${year}`}
+  title={title}
   backButton={true}
   section="Year"
-  sectionUrl={`/years/${year.slice(0, 3)}`}
+  sectionUrl={`${genre ? `/${genre}` : ""}/years/${year.slice(0, 3)}`}
   subSection={year}
+  genre={genre}
 >
   <div class="container mx-auto">
     <div>

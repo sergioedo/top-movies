@@ -12,7 +12,7 @@ export const GENRE_TITLE = {
 		es: 'Acción / Aventura',
 		en: 'Action / Adventure'
 	},
-	'terror': {
+	'horror': {
 		es: 'Terror',
 		en: 'Horror'
 	}
@@ -20,5 +20,5 @@ export const GENRE_TITLE = {
 
 export const GENRE_IDS = {
 	'action': [28, 12, 10752, 37], //Action, Adventure, War, Western
-	'horror': [27]
+	'horror': [27],
 }

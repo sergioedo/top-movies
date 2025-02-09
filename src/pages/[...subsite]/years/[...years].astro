@@ -4,11 +4,12 @@ import YearMoviesList from "@components/YearMoviesList.astro";
 import { getTopMoviesByYear, getTotalMoviesByYear } from "@libs/turso";
 import RightChevron from "@components/icons/RightChevron.astro";
 import LeftChevron from "@components/icons/LeftChevron.astro";
+import { GENRE_IDS, GENRE_TITLE, GENRES } from "@libs/genres";
 
 export const prerender = true;
 export async function getStaticPaths() {
   const totalMoviesByYear = await getTotalMoviesByYear();
-  return [
+  const spaths = [
     ...Object.keys(
       Object.keys(totalMoviesByYear).reduce((prevYears, currYear) => {
         return {
@@ -16,20 +17,33 @@ export async function getStaticPaths() {
           [currYear.slice(0, 3)]: 1, // set Years = year prefix as key YYYX (2013 -> 201)
         };
       }, {})
-    ).map((years) => ({ params: { years } })),
-    { params: { years: undefined } },
+    ).flatMap((years) => {
+      return [
+        ...GENRES.map((genre) => ({ params: { years, subsite: genre } })),
+        { params: { years, subsite: undefined } },
+      ];
+    }),
+    ...GENRES.map((genre) => ({
+      params: { years: undefined, subsite: genre },
+    })),
+    { params: { years: undefined, subsite: undefined } },
   ];
+  console.log(spaths);
+  return spaths;
 }
 
-const { years } = Astro.params;
+const { subsite, years } = Astro.params;
+const genre = subsite?.split("/")[0];
+const genreIds = genre && GENRE_IDS[genre];
+const title = `Top Years (${GENRE_TITLE[genre || ""]?.es})`;
 
-const allTopMoviesByYear = await getTopMoviesByYear(4);
+const allTopMoviesByYear = await getTopMoviesByYear(4, genreIds);
 const yearFilter = years ? years : allTopMoviesByYear[0].year.slice(0, 3);
 const topMoviesByYear = allTopMoviesByYear.filter((tmy) =>
   // @ts-ignore
   tmy.year.startsWith(yearFilter)
 );
-const totalMoviesByYear = await getTotalMoviesByYear();
+const totalMoviesByYear = await getTotalMoviesByYear(genreIds);
 
 const maxYearFilter = allTopMoviesByYear[0].year.slice(0, 3);
 const minYearFilter = allTopMoviesByYear[
@@ -39,7 +53,7 @@ const firstYear = topMoviesByYear[0].year;
 const lastYear = topMoviesByYear[topMoviesByYear.length - 1].year;
 ---
 
-<Layout title="Top Pelis" backButton={true} section="Year">
+<Layout title={title} backButton={true} section="Year" genre={genre}>
   <div class="container mx-auto">
     <div>
       <div class="flex justify-between">
@@ -53,7 +67,9 @@ const lastYear = topMoviesByYear[topMoviesByYear.length - 1].year;
         <div class="flex items-center mb-4 gap-2">
           {
             yearFilter < maxYearFilter && (
-              <a href={`/years/${Number(yearFilter) + 1}`}>
+              <a
+                href={`${genre ? `/${genre}` : ""}/years/${Number(yearFilter) + 1}`}
+              >
                 <LeftChevron />
               </a>
             )
@@ -63,7 +79,9 @@ const lastYear = topMoviesByYear[topMoviesByYear.length - 1].year;
           </h6>
           {
             yearFilter > minYearFilter && (
-              <a href={`/years/${Number(yearFilter) - 1}`}>
+              <a
+                href={`${genre ? `/${genre}` : ""}/years/${Number(yearFilter) - 1}`}
+              >
                 <RightChevron />
               </a>
             )
@@ -78,6 +96,7 @@ const lastYear = topMoviesByYear[topMoviesByYear.length - 1].year;
       <YearMoviesList
         topMoviesByYear={topMoviesByYear}
         totalMoviesByYear={totalMoviesByYear}
+        genre={genre}
       />
     </div>
   </div>

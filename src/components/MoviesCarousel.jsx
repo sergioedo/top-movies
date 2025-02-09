@@ -17,7 +17,7 @@ export const MoviesCarousel = ({ movies }) => {
 	)
 }
 
-export const YearMoviesCarousel = ({ topMoviesByYear, totalMoviesByYear }) => {
+export const YearMoviesCarousel = ({ topMoviesByYear, totalMoviesByYear, genre }) => {
 	return (
 		<Carousel
 			showArrows={true}
@@ -27,7 +27,7 @@ export const YearMoviesCarousel = ({ topMoviesByYear, totalMoviesByYear }) => {
 		>
 			{topMoviesByYear && topMoviesByYear.map(yearMovies => <YearMoviesCard
 				yearMovies={yearMovies}
-				totalMovies={totalMoviesByYear[yearMovies.year]} />)}
+				totalMovies={totalMoviesByYear[yearMovies.year]} genre={genre} />)}
 		</Carousel >
 	)
 }

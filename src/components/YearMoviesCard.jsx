@@ -1,6 +1,6 @@
 import { YearCircleProgress } from "./CircleProgress";
 
-const YearMoviesCard = ({ yearMovies, totalMovies }) => {
+const YearMoviesCard = ({ yearMovies, totalMovies, genre }) => {
 	const { year, movies } = yearMovies;
 	const initialYearStats = {
 		seenMoviesCount: 0,
@@ -33,6 +33,7 @@ const YearMoviesCard = ({ yearMovies, totalMovies }) => {
 				year={Number(year)}
 				totalYearMovies={totalMovies}
 				initialStats={initialYearStats}
+				genre={genre}
 			/>
 		</div>
 	)

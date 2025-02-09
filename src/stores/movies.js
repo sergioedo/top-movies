@@ -16,7 +16,9 @@ export const $movies = persistentMap('nano-movies:', {
 export const getUserMovies = () => $movies.get()[$user.get()?.email] || []
 
 const fetchUserMovies = async (userEmail) => {
-	const response = await fetch("/api/user/movies", {
+	const firstPathSegment = window.location.pathname.split('/')[1];
+	const genre = GENRES.includes(firstPathSegment) ? firstPathSegment : undefined;
+	const response = await fetch(`/api/user/movies${genre ? '?genre=' + genre : ''}`, {
 		method: "GET",
 		credentials: "include",
 	});

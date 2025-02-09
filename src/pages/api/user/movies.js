@@ -1,7 +1,12 @@
-import { getUserMovies } from '@libs/turso'
+import { getUserMovies } from '@libs/turso';
+import { GENRE_IDS } from '@libs/genres';
 
-export async function GET({ locals }) {
+export async function GET({ locals, request }) {
 	const userEmail = locals?.user?.email;
+	const url = new URL(request.url);
+	const params = Object.fromEntries(url.searchParams.entries());
+	const genre = params.genre;
+	const genreIds = genre && GENRE_IDS[genre];
 
 	if (!userEmail) {
 		return new Response(
@@ -11,7 +16,7 @@ export async function GET({ locals }) {
 	}
 
 	try {
-		const movies = await getUserMovies(userEmail);
+		const movies = await getUserMovies(userEmail, genreIds);
 
 		return new Response(JSON.stringify(movies), {
 			status: 200,
