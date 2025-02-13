@@ -1,7 +1,8 @@
 import { YearCircleProgress } from "./CircleProgress";
 
-const YearMoviesCard = ({ yearMovies, totalMovies, genre }) => {
+const YearMoviesCard = ({ yearMovies, genre }) => {
 	const { year, movies } = yearMovies;
+	const totalMovies = movies.length;
 	const initialYearStats = {
 		seenMoviesCount: 0,
 		seenPercentage: 0,
@@ -16,7 +17,7 @@ const YearMoviesCard = ({ yearMovies, totalMovies, genre }) => {
 			{/* Contenedor de los posters y círculo*/}
 			<div className="grid grid-cols-2 grid-rows-2 gap-0">
 				{
-					movies.map((movie, idx) => (
+					movies.slice(0, 4).map((movie, idx) => (
 						<a href={`/movies/${movie.id}`} key={movie.id} id={movie.id}>
 							<img
 								src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -31,7 +32,7 @@ const YearMoviesCard = ({ yearMovies, totalMovies, genre }) => {
 			<YearCircleProgress
 				client:visible
 				year={Number(year)}
-				totalYearMovies={totalMovies}
+				yearMovies={movies}
 				initialStats={initialYearStats}
 				genre={genre}
 			/>

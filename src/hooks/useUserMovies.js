@@ -1,4 +1,4 @@
-import { $movies, $nextUserMovies, getUserMovies, updateMovieStatus, getYearMoviesStats, getAllMoviesStats } from '../stores/movies';
+import { $movies, $nextUserMovies, getUserMovies, updateMovieStatus, getUserMoviesStats, getAllUserMoviesStats } from '../stores/movies';
 import useStoreState from "./useStoreState";
 
 export const useUserMovies = (props = { initialNextMovies: [] }) => {
@@ -9,7 +9,7 @@ export const useUserMovies = (props = { initialNextMovies: [] }) => {
 		nextUserMovies,
 		getUserMovies,
 		updateMovieStatus,
-		getAllMoviesStats,
-		getYearMoviesStats
+		getAllUserMoviesStats,
+		getUserMoviesStats
 	}
 }

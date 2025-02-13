@@ -122,11 +122,23 @@ const getMoviesStats = (movies, totalMoviesCount) => {
 	};
 }
 
-export const getYearMoviesStats = (year, yearMoviesCount) => {
-	const yearMovies = getUserMovies().filter((m) => m.year === year) || [];
-	return getMoviesStats(yearMovies, yearMoviesCount);
+export const getUserMoviesStats = (movies) => {
+	return getMoviesStats(applyUserMoviesStatus(movies), movies.length)
 }
-export const getAllMoviesStats = (totalMoviesCount) => {
+
+export const applyUserMoviesStatus = (movies) => {
+	const userMovies = getUserMovies();
+	const moviesWithUserStats = movies.map((m) => {
+		const userMovie = userMovies.find(um => um.id === m.id);
+		if (userMovie) {
+			return { ...m, status: userMovie.status }
+		}
+		return m
+	});
+	return moviesWithUserStats;
+}
+
+export const getAllUserMoviesStats = (totalMoviesCount) => {
 	return getMoviesStats(getUserMovies(), totalMoviesCount);
 }
 

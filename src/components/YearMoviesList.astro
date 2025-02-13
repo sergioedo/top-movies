@@ -18,12 +18,7 @@ const { topMoviesByYear, totalMoviesByYear, genre } = Astro.props;
   >
     {
       topMoviesByYear.map((yearMovies) => (
-        <YearMoviesCard
-          client:visible
-          yearMovies={yearMovies}
-          totalMovies={totalMoviesByYear[yearMovies.year]}
-          genre={genre}
-        />
+        <YearMoviesCard client:visible yearMovies={yearMovies} genre={genre} />
       ))
     }
   </div>

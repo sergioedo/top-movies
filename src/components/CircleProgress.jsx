@@ -71,12 +71,12 @@ const CircleProgress = ({ stats, title, subtitle, url }) => {
 	)
 }
 
-export const YearCircleProgress = ({ initialStats, year, totalYearMovies, genre }) => {
-	const { userMovies, getYearMoviesStats } = useUserMovies()
+export const YearCircleProgress = ({ initialStats, year, yearMovies, genre }) => {
+	const { userMovies, getUserMoviesStats } = useUserMovies()
 	const [yearStats, setYearStats] = useState(initialStats)
 	useEffect(() => {
-		if (userMovies) setYearStats(getYearMoviesStats(year, totalYearMovies))
+		if (userMovies) setYearStats(getUserMoviesStats(yearMovies))
 	}, [userMovies])
-	const subtitle = `${yearStats.seenMoviesCount + yearStats.discardMoviesCount}/${totalYearMovies}`
+	const subtitle = `${yearStats.seenMoviesCount + yearStats.discardMoviesCount}/${yearMovies.length}`
 	return <CircleProgress stats={yearStats} title={year} subtitle={subtitle} url={`${genre ? `/${genre}` : ''}/year/${year}`} />
 }

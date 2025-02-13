@@ -42,7 +42,7 @@ export async function getAllMovies() {
 	return rows;
 }
 
-export async function getTopMoviesByYear(numTop = 1, genre_ids) {
+export async function getTopMoviesByYear(numTop = -1, genre_ids) {
 	const genreFilter = `WHERE EXISTS (
 		SELECT 1 FROM json_each(genre_ids) 
 		WHERE json_each.value IN (${genre_ids?.join(",")})
@@ -61,11 +61,11 @@ export async function getTopMoviesByYear(numTop = 1, genre_ids) {
 		FROM movies
 		${genre_ids ? genreFilter : ''}
 		) AS ranked_movies
-		WHERE ranking <= ?
+		${numTop > 0 ? `WHERE ranking <= ${numTop}` : ''}
 		ORDER BY year DESC, rating DESC
 	`;
 
-	const { rows } = await client.execute(query, [numTop]);
+	const { rows } = await client.execute(query);
 
 	// Agrupar las películas por año
 	const moviesByYear = rows.reduce((acc, movie) => {

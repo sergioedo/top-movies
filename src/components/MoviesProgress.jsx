@@ -2,10 +2,10 @@ import { useUserMovies } from "hooks/useUserMovies"
 import { useEffect, useState } from "react"
 
 const MoviesProgress = ({ initialStats, totalMovies }) => {
-	const { userMovies, getAllMoviesStats } = useUserMovies()
+	const { userMovies, getAllUserMoviesStats } = useUserMovies()
 	const [allMoviesStats, setAllMoviesStats] = useState(initialStats)
 	useEffect(() => {
-		if (userMovies) setAllMoviesStats(getAllMoviesStats(totalMovies))
+		if (userMovies) setAllMoviesStats(getAllUserMoviesStats(totalMovies))
 	}, [userMovies])
 
 	return (

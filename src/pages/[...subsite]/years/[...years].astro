@@ -37,7 +37,7 @@ const genre = subsite?.split("/")[0];
 const genreIds = genre && GENRE_IDS[genre];
 const title = `Top Years (${GENRE_TITLE[genre || ""]?.es})`;
 
-const allTopMoviesByYear = await getTopMoviesByYear(4, genreIds);
+const allTopMoviesByYear = await getTopMoviesByYear(undefined, genreIds);
 const yearFilter = years ? years : allTopMoviesByYear[0].year.slice(0, 3);
 const topMoviesByYear = allTopMoviesByYear.filter((tmy) =>
   // @ts-ignore
