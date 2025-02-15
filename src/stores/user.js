@@ -25,7 +25,11 @@ async function checkSession() {
 		});
 		if (response.ok) {
 			const session = await response.json();
-			setStoredUser(session?.user);
+			if (session?.user) {
+				setStoredUser(session?.user);
+			} else {
+				setAnonymousStoredUser();
+			}
 		} else {
 			setAnonymousStoredUser();
 		}

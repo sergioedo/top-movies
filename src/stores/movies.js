@@ -1,3 +1,4 @@
+import { onMount } from 'nanostores'
 import { persistentAtom, persistentMap } from '@nanostores/persistent'
 import { $user, anonymousUser, isAnonymousUser } from './user'
 import { computed, task } from 'nanostores'
@@ -13,7 +14,7 @@ export const $movies = persistentMap('nano-movies:', {
 	[anonymousUser.email]: []
 }, storageEncoding)
 
-export const getUserMovies = () => $movies.get()[$user.get()?.email] || []
+export const getUserMovies = () => $movies.get()[$user.get()?.email || anonymousUser.email] || []
 
 const fetchUserMovies = async (userEmail) => {
 	const firstPathSegment = window.location.pathname.split('/')[1];
@@ -43,7 +44,7 @@ export const updateMovieStatus = async (movieId, newStatus, year) => {
 		];
 	}
 	// Save on localstorage
-	$movies.setKey($user.get()?.email, movies)
+	$movies.setKey($user.get()?.email || anonymousUser.email, movies)
 
 	// Save user movie (server)
 	if ($user.get() && !isAnonymousUser($user.get())) {
@@ -147,3 +148,16 @@ export const defaultMovieFilters = {
 	showPendingMovies: true
 }
 export const $movieFilters = persistentAtom('nano-movie-filters', defaultMovieFilters, storageEncoding)
+
+onMount($movies, () => {
+	// Mount mode
+	(async () => {
+		if ($user.get() && !isAnonymousUser($user.get())) {
+			// force refresh movies on mount, to mantain synced
+			await fetchUserMovies($user.get().email)
+		}
+	})();
+	return () => {
+		// Disabled mode
+	}
+})
