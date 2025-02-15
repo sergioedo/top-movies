@@ -10,7 +10,17 @@ import TopPlay from "@components/icons/TopPlay.astro";
 import TopCalendar from "@components/icons/TopCalendar.astro";
 import TopMovie from "@components/icons/TopMovie.astro";
 import TopTitle from "@components/TopTitle.astro";
-import { GENRE_TITLE } from "@libs/genres";
+import { GENRE_ICONS, GENRE_TITLE, GENRES, genreTitle } from "@libs/genres";
+import GenreAction from "@components/icons/GenreAction.astro";
+import GenreThriller from "@components/icons/GenreThriller.astro";
+import GenreHorror from "@components/icons/GenreHorror.astro";
+import GenreFantasy from "@components/icons/GenreFantasy.astro";
+import GenreSciFi from "@components/icons/GenreSciFi.astro";
+import GenreFamily from "@components/icons/GenreFamily.astro";
+import GenreComedy from "@components/icons/GenreComedy.astro";
+import GenreRomance from "@components/icons/GenreRomance.astro";
+import GenreAnime from "@components/icons/GenreAnime.astro";
+import Genres from "@components/icons/Genres.astro";
 
 export interface Props {
   title: string;
@@ -23,8 +33,6 @@ export interface Props {
 
 const { title, backButton, section, sectionUrl, subSection, genre } =
   Astro.props as Props;
-
-const genreTitle = `${GENRE_TITLE[genre || ""]?.es}`;
 ---
 
 <!doctype html>
@@ -41,6 +49,11 @@ const genreTitle = `${GENRE_TITLE[genre || ""]?.es}`;
       defer
       src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"
     ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"
+    ></script>
+
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
       import "../scripts/spa-navigation.js";
@@ -79,7 +92,7 @@ const genreTitle = `${GENRE_TITLE[genre || ""]?.es}`;
           >
             <div class="w-12 mr-1"><Logo /></div>
             <span class="mr-2 text-red-600">op</span>
-            <span class="">{genreTitle}</span>
+            <span class="">{genreTitle(genre)}</span>
           </a>
 
           <!-- search  -->
@@ -136,15 +149,67 @@ const genreTitle = `${GENRE_TITLE[genre || ""]?.es}`;
               <TopTitle title="Year" />
             </a>
 
-            <a
-              href="#"
-              class="flex items-center rounded-xl gap-2 px-2 py-1.5 text-sm font-medium text-slate-700 underline-offset-2 hover:bg-red-700/5 hover:text-black focus-visible:underline focus:outline-none dark:text-slate-300 dark:hover:bg-red-600/10 dark:hover:text-white"
-            >
-              <TopMovie />
-              <span class="tracking-wider text-lg text-white font-semibold">
-                Géneros
-              </span>
-            </a>
+            <!-- collapsible item  -->
+            <div x-data="{ isExpanded: false }" class="flex flex-col">
+              <button
+                type="button"
+                x-on:click="isExpanded = ! isExpanded"
+                id="genres-btn"
+                aria-controls="genres"
+                x-bind:aria-expanded="isExpanded ? 'true' : 'false'"
+                class="flex items-center justify-between rounded-xl gap-2 px-2 py-1.5 text-sm font-medium underline-offset-2 focus:outline-none focus-visible:underline"
+                x-bind:class="isExpanded ? 'text-black bg-blue-700/10 dark:text-white dark:bg-red-600/10' :  'text-slate-700 hover:bg-blue-700/5 hover:text-black dark:text-slate-300 dark:hover:text-white dark:hover:bg-red-600/5'"
+              >
+                <Genres />
+                <span
+                  class="mr-auto text-left tracking-wider text-lg text-white font-semibold"
+                >
+                  Géneros
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  class="size-5 transition-transform rotate-0 shrink-0"
+                  x-bind:class="isExpanded ? 'rotate-180' : 'rotate-0'"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                    clip-rule="evenodd"></path>
+                </svg>
+              </button>
+
+              <ul
+                x-cloak
+                x-collapse
+                x-show="isExpanded"
+                aria-labelledby="genres-btn"
+                id="genres"
+              >
+                {
+                  GENRES.map((g) => {
+                    const Icon = GENRE_ICONS[g];
+                    const borderColor =
+                      g === genre
+                        ? "dark:border-red-600"
+                        : "dark:hover:border-slate-300 dark:border-slate-800";
+                    return (
+                      <li class="px-0 py-0.5 first:mt-2">
+                        <a
+                          href={`/${g}`}
+                          class={`flex items-center rounded-xl gap-2 px-4 py-1.5 font-medium text-slate-700 underline-offset-2 hover:bg-red-700/5 hover:text-black focus-visible:underline focus:outline-none dark:text-slate-300 dark:hover:bg-red-600/10 dark:hover:text-white ${borderColor} dark:border-2`}
+                        >
+                          <Icon />
+                          <TopTitle title={genreTitle(g)} />
+                        </a>
+                      </li>
+                    );
+                  })
+                }
+              </ul>
+            </div>
           </div>
 
           <!-- Footer -->
@@ -171,7 +236,7 @@ const genreTitle = `${GENRE_TITLE[genre || ""]?.es}`;
                   <Logo />
                 </div>
                 <span class="text-xs text-white font-mono"
-                  >{genreTitle.toLowerCase()}</span
+                  >{genreTitle(genre).toLowerCase()}</span
                 >
               </div>
               <span class="sr-only">sidebar toggle</span>
