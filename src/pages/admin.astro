@@ -43,7 +43,31 @@ import BackButton from "@components/BackButton.astro";
             type="number"
             max="3000"
             x-model="year_end"
-            placeholder="Introduce el año (ej. 2023)"
+            :placeholder="year_start"
+            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm text-black"
+          />
+        </div>
+        <div>
+          <label for="votes" class="block text-sm font-medium text-white mb-1"
+            >Mínimo número de votos:</label
+          >
+          <input
+            id="votes"
+            type="number"
+            x-model="votes"
+            placeholder="1000"
+            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm text-black"
+          />
+        </div>
+        <div>
+          <label for="rating" class="block text-sm font-medium text-white mb-1"
+            >Mínima puntuación:</label
+          >
+          <input
+            id="rating"
+            type="number"
+            x-model="rating"
+            placeholder="7"
             class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm text-black"
           />
         </div>
@@ -77,6 +101,8 @@ import BackButton from "@components/BackButton.astro";
     return {
       year_start: "",
       year_end: "",
+      votes: "",
+      rating: "",
       loading: false,
       message: "",
       isError: false,
@@ -90,14 +116,18 @@ import BackButton from "@components/BackButton.astro";
           const fromYear = this.year_start;
           const toYear =
             this.year_end.length > 0 ? this.year_end : this.year_start;
-          for (let year = fromYear; year <= toYear; year++) {
+          for (let year = Number(fromYear); year <= toYear; year++) {
             const response = await fetch("/api/tmdb", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
               credentials: "include",
-              body: JSON.stringify({ year }),
+              body: JSON.stringify({
+                year,
+                rating: this.rating?.length ? Number(this.rating) : undefined,
+                votes: this.votes?.length ? Number(this.votes) : undefined,
+              }),
             });
 
             if (!response.ok) throw new Error("Error actualizando películas.");
@@ -109,6 +139,8 @@ import BackButton from "@components/BackButton.astro";
 
           this.year_start = ""; // Resetea el campo tras éxito
           this.year_end = ""; // Resetea el campo tras éxito
+          this.votes = ""; // Resetea el campo tras éxito
+          this.rating = ""; // Resetea el campo tras éxito
         } catch (error) {
           this.message = error.message || "Error al conectar con el servidor.";
           this.isError = true;
