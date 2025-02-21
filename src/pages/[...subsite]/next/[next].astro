@@ -16,7 +16,7 @@ const nextAnonymousMovies = (await getNextUserMovies(userEmail, genreIds))
   .map((movie) => ({ status: "UNKNOWN", visible: true, ...movie })); // default movies without user (anonymous)
 ---
 
-<Layout title={title} backButton={true} section="Next" genre={genre}>
+<Layout title={title} backButton={true} section="Next" genre={genre} sectionUrl={`/next/${next}`}>
 {userEmail ?
   <div class="container mx-auto">
     <div class="flex justify-between">

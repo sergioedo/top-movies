@@ -16,7 +16,13 @@ const topMovies = (await getNextUserMovies(undefined, genreIds))
   .map((movie) => ({ ...movie, status: "UNKNOWN", visible: true })); // default movies without user (anonymous)
 ---
 
-<Layout title={title} backButton={true} section="50" genre={genre}>
+<Layout
+  title={title}
+  backButton={true}
+  section={top}
+  genre={genre}
+  sectionUrl={`/top/${top}`}
+>
   <div class="container mx-auto">
     <div class="flex justify-between">
       <h2

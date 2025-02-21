@@ -53,7 +53,13 @@ const firstYear = topMoviesByYear[0].year;
 const lastYear = topMoviesByYear[topMoviesByYear.length - 1].year;
 ---
 
-<Layout title={title} backButton={true} section="Year" genre={genre}>
+<Layout
+  title={title}
+  backButton={true}
+  section="Year"
+  genre={genre}
+  sectionUrl="/years"
+>
   <div class="container mx-auto">
     <div>
       <div class="flex justify-between">
