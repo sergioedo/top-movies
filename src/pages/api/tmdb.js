@@ -44,7 +44,12 @@ export async function POST({ request, locals }) {
 
 		// Guardar las películas filtradas en la base de datos
 		for (const movie of allMovies) {
-			await saveMovie(movie);
+			// Obtener información sobre los proveedores donde ver la película
+			const res = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/watch/providers?api_key=${TMDB_API_KEY}`);
+			const data = await res.json();
+			const provider_ids = data?.results?.ES?.flatrate?.map(service => service.provider_id) || []
+
+			await saveMovie({ ...movie, provider_ids });
 		}
 
 		return new Response(JSON.stringify({ success: true, movies: allMovies }), {

@@ -127,11 +127,11 @@ export async function getBestMoviesByYear(year, genre_ids, minRating = 7) {
 }
 
 export async function saveMovie(movie) {
-	const { id, title, release_date, vote_average, overview, poster_path, genre_ids } = movie;
+	const { id, title, release_date, vote_average, overview, poster_path, genre_ids, provider_ids } = movie;
 	await client.execute(`
-    INSERT INTO movies (id, title, release_date, rating, overview, poster_path, genre_ids)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `, [id, title, release_date, vote_average, overview, poster_path, JSON.stringify(genre_ids)]);
+    INSERT INTO movies (id, title, release_date, rating, overview, poster_path, genre_ids, provider_ids)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `, [id, title, release_date, vote_average, overview, poster_path, JSON.stringify(genre_ids), JSON.stringify(provider_ids)]);
 }
 
 export async function saveUserMovie(movieId, userEmail, status) {

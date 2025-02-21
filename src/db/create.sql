@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS movies (
 	rating REAL,
 	overview TEXT,
 	poster_path TEXT,
-	genre_ids JSON
+	genre_ids JSON,
+	provider_ids JSON
 );
 
 DROP TABLE user_movies;
