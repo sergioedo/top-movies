@@ -35,13 +35,17 @@ const movie = {
 	})),
 	images: data.images.backdrops.slice(0, 9),
 }
+
+// Obtener información sobre los proveedores donde ver la película
+const res = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/watch/providers?api_key=${import.meta.env.TMDB_API_KEY}`);
+const providersData = await res.json();
+const providers = providersData?.results?.ES?.flatrate || []
+console.log({providers})
 ---
-	<Layout title={`Peli - ${movie.title}`} backButton={true}>
+	<Layout title={`Peli - ${movie.title}`} backButton={false}>
 		<div class="movie-info border-b border-gray-800">
-			<div class="container mx-auto px-4 py-8 flex flex-col md:flex-row">
-				<div class="flex-none">
-					<img src={movie.poster_path} alt={`${movie.title} Poster`} class="movie-poster w-64 lg:w-96" id="movie-poster">
-				</div>
+			<div class="container mx-auto flex flex-col md:flex-row">
+				<img src={movie.poster_path} alt={`${movie.title} Poster`} class="movie-poster md:w-64 lg:w-96" id="movie-poster">
 				<div class="md:ml-24">
 					<h2 class="text-4xl mt-4 md:mt-0 mb-2 font-semibold">{movie.title}</h2>
 					<div class="flex flex-wrap items-center text-gray-400 text-sm">
@@ -57,21 +61,20 @@ const movie = {
 						{movie.overview}
 					</p>
 	
-					<div class="mt-12">
-						<h4 class="text-white font-semibold">Featured Crew</h4>
-						<div class="flex mt-4">
-							{movie.crew.map(crew => (
-								<div class="mr-8">
-									<div>{crew.name}</div>
-									<div class="text-gray-400 text-sm">{crew.job}</div>
-								</div>
-							))}
+					<div class="mt-8">
+						<p class="">{providers.length > 0 ? 'Disponible en:' : 'No disponible en plataformas'}</p>
+						<div class="flex gap-2 mt-4 flex-wrap">
+							{
+								providers.map(p => {
+									return <img class="rounded-xl" width="64px" height="64px" src={`https://media.themoviedb.org/t/p/original${p.logo_path}`} alt={p.provider_name} />
+								})
+							}
 						</div>
 					</div>
 	
 					<div x-data="{ isOpen: false }">
 						{movie.videos.results.length && (
-							<div class="mt-12">
+							<div class="mt-8">
 								<button	@click="isOpen = true"
 								class="flex items-center bg-red-600 text-white rounded font-semibold px-5 py-4 hover:bg-red-800 transition ease-in-out duration-150"
 							>
@@ -87,6 +90,18 @@ const movie = {
 					</Modal>
 					)}
 				</div>
+
+				<div class="mt-12">
+					<h4 class="text-white font-semibold">Equipo de producción</h4>
+					<div class="flex mt-4">
+						{movie.crew.map(crew => (
+							<div class="mr-8">
+								<div>{crew.name}</div>
+								<div class="text-gray-400 text-sm">{crew.job}</div>
+							</div>
+						))}
+					</div>
+				</div>
 	
 			</div>
 		</div>
@@ -94,7 +109,7 @@ const movie = {
 	
 	<div class="movie-cast border-b border-gray-800">
 		<div class="container mx-auto px-4 py-16">
-			<h2 class="text-4xl font-semibold">Cast</h2>
+			<h2 class="text-4xl font-semibold">Reparto</h2>
 			<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
 			{movie.cast.map(cast => (
 				<div class="mt-8">
@@ -116,7 +131,7 @@ const movie = {
 	
 	<div class="movie-images" x-data="{ isOpen: false, image: ''}">
 		<div class="container mx-auto px-4 py-16">
-			<h2 class="text-4xl font-semibold">Images</h2>
+			<h2 class="text-4xl font-semibold">Imágenes</h2>
 			<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
 			{movie.images.map(image => (
 				<div class="mt-8">
