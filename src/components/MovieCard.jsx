@@ -3,6 +3,7 @@ import { useUserMovies } from "hooks/useUserMovies"
 import { useCallback, useEffect, useState } from "react"
 import Stamp from "./Stamp";
 import { DiscardButton, UndoButton, WatchedButton } from "./icons/StatusButtons";
+import { getMovieProviderById, MOVIE_PROVIDERS } from "@libs/providers";
 
 
 const statusBorderColors = {
@@ -137,32 +138,49 @@ export const MovieCard = ({ initialMovie, isVisible = returnTrue, fullDetail = f
 
 					{/* <!-- Botones flotantes en la parte inferior --> */}
 					<div
-						className="absolute inset-x-0 bottom-0 flex justify-center gap-8 md:gap-4 mb-4 px-4 py-4 pointer-events-none"
+						className="absolute inset-x-0 bottom-0 flex flex-col justify-center px-4 py-4"
 					>
-						<StatusButton
-							status={movie.status}
-							iconStatus="WATCHED"
-							actionStatus="WATCHED"
-							onChangeStatus={handleStatusChange}
-							showStatus={["UNKNOWN"]}
-							opacity={true}
-						/>
-						<StatusButton
-							status={movie.status}
-							iconStatus="UNDO"
-							actionStatus="UNKNOWN"
-							onChangeStatus={handleStatusChange}
-							showStatus={["WATCHED", "DISCARD"]}
-							opacity={true}
-						/>
-						<StatusButton
-							status={movie.status}
-							iconStatus="DISCARD"
-							actionStatus="DISCARD"
-							onChangeStatus={handleStatusChange}
-							showStatus={["UNKNOWN"]}
-							opacity={true}
-						/>
+						<div className="flex justify-center gap-8 md:gap-4 mb-2 md:mb-0 pointer-events-none">
+
+							<StatusButton
+								status={movie.status}
+								iconStatus="WATCHED"
+								actionStatus="WATCHED"
+								onChangeStatus={handleStatusChange}
+								showStatus={["UNKNOWN"]}
+								opacity={true}
+							/>
+							<StatusButton
+								status={movie.status}
+								iconStatus="UNDO"
+								actionStatus="UNKNOWN"
+								onChangeStatus={handleStatusChange}
+								showStatus={["WATCHED", "DISCARD"]}
+								opacity={true}
+							/>
+							<StatusButton
+								status={movie.status}
+								iconStatus="DISCARD"
+								actionStatus="DISCARD"
+								onChangeStatus={handleStatusChange}
+								showStatus={["UNKNOWN"]}
+								opacity={true}
+							/>
+						</div>
+
+						<div class="flex items-center justify-center gap-1 min-h-12 md:min-h-8">
+							{
+								movie?.provider_ids?.map(id => {
+									const provider = getMovieProviderById(id)
+									console.log(id)
+									return (
+										<div class="">
+											<img class="rounded-lg w-auto max-h-12 md:max-h-8 object-cover" src={`https://media.themoviedb.org/t/p/original${provider?.logo_path}`} alt={provider?.provider_name} />
+										</div>)
+								})
+							}
+						</div>
+
 					</div>
 				</div>
 				{/* Ficha/Detalle */}

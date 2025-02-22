@@ -115,7 +115,7 @@ export async function getBestMoviesByYear(year, genre_ids, minRating = 7) {
 		WHERE json_each.value IN (${genre_ids?.join(",")})
 		)`;
 	const query = `
-	  SELECT id, title, release_date, rating, overview, poster_path, CAST(strftime('%Y', release_date) as integer) as year
+	  SELECT id, title, release_date, rating, overview, poster_path, CAST(strftime('%Y', release_date) as integer) as year, provider_ids, genre_ids
 	  FROM movies
 	  WHERE strftime('%Y', release_date) = ? AND rating >= ?
 	 ${genre_ids ? genreFilter : ''}
@@ -123,7 +123,13 @@ export async function getBestMoviesByYear(year, genre_ids, minRating = 7) {
 	`;
 
 	const { rows } = await client.execute(query, [year, minRating]);
-	return rows;
+	return rows.map(r => {
+		return {
+			...r,
+			genre_ids: r.genre_ids ? JSON.parse(r.genre_ids) : [],
+			provider_ids: r.provider_ids ? JSON.parse(r.provider_ids) : []
+		}
+	});
 }
 
 export async function saveMovie(movie) {
@@ -166,7 +172,7 @@ export async function getNextUserMovies(userEmail, genre_ids) {
     					WHERE json_each.value IN (${genre_ids?.join(",")})
 						)`
 	const query = `
-		SELECT m.id, m.title, m.release_date, m.rating, m.overview, m.poster_path, CAST(strftime('%Y', m.release_date) as integer) as year
+		SELECT m.id, m.title, m.release_date, m.rating, m.overview, m.poster_path, CAST(strftime('%Y', m.release_date) as integer) as year, m.provider_ids, m.genre_ids
 	  	FROM movies m
   		${userEmail ? userFilter : ''}
 		${userEmail && genre_ids ? ' AND ' : genre_ids ? 'WHERE ' : ''}
@@ -174,5 +180,11 @@ export async function getNextUserMovies(userEmail, genre_ids) {
 		ORDER BY m.rating desc
 		LIMIT 50`;
 	const { rows } = await client.execute(query, userEmail ? [userEmail] : []);
-	return rows;
+	return rows.map(r => {
+		return {
+			...r,
+			genre_ids: r.genre_ids ? JSON.parse(r.genre_ids) : [],
+			provider_ids: r.provider_ids ? JSON.parse(r.provider_ids) : []
+		}
+	});
 }
